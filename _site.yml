@@ -5,9 +5,16 @@ navbar:
   right:
     - text: "About"
       href: about.html
+    - text: "Report"
+      href: Report.html
+    - text: "Exploratory Data Analysis"
+      href: Exploratory-Data-Analysis.html
+    - text: "Data Analysis"
+      href: Data-Analysis.html
     - icon: fa-envelope fa-lg
       href: mailto:<you@youremail.com>
     - icon: fa-github fa-lg
       href: http://github.com/<YOUR_GH_NAME>/
 output:
-  html_document
+  html_document:
+   css: /bootstrap-3.3.5/bootstrap.min.css
