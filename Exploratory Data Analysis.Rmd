@@ -4,3 +4,20 @@ title: "Exploratory"
 
 ### About this site
 
+```{r, include=FALSE}
+library(tidyverse)
+```
+
+```{r, include=FALSE}
+#start of data cleaning
+#importing museum data
+
+museum_df = read_csv("./Data/museums.csv", na = c("NA")) %>% 
+  janitor::clean_names() %>% 
+  select(-alternate_name, institution_name, phone_number, employer_id_number)
+
+education_key_df = read_csv("./Data/ACSST5Y2014.S1501-Column-Metadata.csv") %>% 
+  janitor::clean_names()
+education_df = read_csv("./Data/ACSST5Y2014.S1501-Data.csv", skip = 1, na = c("-", "**", "***", "(x)")) %>% janitor::clean_names()
+```
+

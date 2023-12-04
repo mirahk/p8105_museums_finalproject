@@ -14,7 +14,7 @@ navbar:
     - icon: fa-envelope fa-lg
       href: mailto:<you@youremail.com>
     - icon: fa-github fa-lg
-      href: http://github.com/<YOUR_GH_NAME>/
+      href: https://github.com/mirahk/p8105_museums_finalproject.github.io
 output:
   html_document:
-   css: /bootstrap-3.3.5/bootstrap.min.css
+   theme: journal

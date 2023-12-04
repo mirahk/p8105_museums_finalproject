@@ -2,10 +2,13 @@
 title: "Museums, Aquariums, and Zoos: How they affect the people around them"
 ---
 
+```{css, echo=FALSE}
+h1.title {
+text-align: center;
+}
+```
 
-Motivation
 
-Overview
 
-Video
+
 
