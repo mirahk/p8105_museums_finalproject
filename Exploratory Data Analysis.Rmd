@@ -2,10 +2,9 @@
 title: "Exploratory Data Analysis"
 ---
 
-### About this site
-
 ```{r, include=FALSE}
 library(tidyverse)
+library(plotly)
 ```
 
 ```{r, include=FALSE}
@@ -42,4 +41,32 @@ education_df =
 museum_edu_df =
   inner_join(museum_df, education_df)
 ```
+
+### U.S. States by Number of Museums/Zoos/Aquariums
+
+```{r, echo = FALSE}
+museum_edu_df |> 
+  count(state) |> 
+  mutate(state = fct_reorder(as_factor(state), n)) |> 
+  plot_ly(x = ~state, y = ~n, color = ~state, type = "bar", colors = "viridis")
+```
+
+New York state has far and away the most museums, zoos, and aquariums (n = 609). DC also has a lot when you consider the fact that it is essentially just a city (n = 42), but this makes sense when you think about DC as the capitol city of the whole country.
+
+### Number of Museums in a City by Average Median Income of the Population
+
+```{r, echo = FALSE, warning = FALSE}
+museum_edu_df |> 
+  group_by(city) |> 
+  summarize(
+    n_museums = n(),
+    avg_median_income = mean(median_income)
+  ) |> 
+  filter(n_museums >= 5) |> 
+  plot_ly(x = ~n_museums, y = ~avg_median_income, type = "scatter", mode = "markers",
+          text = ~city)
+```
+
+The above scatterplot shows the number of museums in a city by the average median income of the population over 25 years. Only cities that have at least five museums are included. There does not appear to be much of a correlation, between the two variables; we can see this with the large amount of variation in income for the cities with 5 museums. Notably, New York City has 68 museums, and an average median annual income of $68.7K. Average median income is obtained by average the median income by zip codes within the city.
+
 
