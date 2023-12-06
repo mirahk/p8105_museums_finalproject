@@ -1,5 +1,5 @@
 ---
-title: "Exploratory"
+title: "Exploratory Data Analysis"
 ---
 
 ### About this site
@@ -9,15 +9,37 @@ library(tidyverse)
 ```
 
 ```{r, include=FALSE}
-#start of data cleaning
-#importing museum data
+#data import and cleaning
 
-museum_df = read_csv("./Data/museums.csv", na = c("NA")) %>% 
+museum_df = 
+  read_csv("./Data/museums.csv", na = c("NA")) %>% 
   janitor::clean_names() %>% 
-  select(-alternate_name, institution_name, phone_number, employer_id_number)
+  select(
+    -legal_name, -alternate_name, -institution_name, -phone_number, -employer_id_number,
+    -ends_with("administrative_location"), -starts_with("street_address")) |> 
+  drop_na(zip_code_physical_location) |> 
+  mutate(
+    city = city_physical_location,
+    state = state_physical_location,
+    zip_code = zip_code_physical_location
+  ) |> 
+  select(-ends_with("physical_location"))
 
-education_key_df = read_csv("./Data/ACSST5Y2014.S1501-Column-Metadata.csv") %>% 
-  janitor::clean_names()
-education_df = read_csv("./Data/ACSST5Y2014.S1501-Data.csv", skip = 1, na = c("-", "**", "***", "(x)")) %>% janitor::clean_names()
+education_df = 
+  read_csv(
+    "./Data/ACSST5Y2014.S1501-Data.csv", skip = 1, na = c("-", "**", "***", "(x)")) %>% 
+  janitor::clean_names() |> 
+  mutate(
+    zip_code = as.numeric(str_replace(geographic_area_name, "ZCTA5 ", "")),
+    less_than_HS = total_estimate_less_than_high_school_graduate,
+    HS_diploma = total_estimate_high_school_graduate_includes_equivalency,
+    some_college = total_estimate_some_college_or_associates_degree,
+    bachelors = total_estimate_bachelors_degree_or_higher,
+    median_income = total_estimate_median_earnings_in_the_past_12_months_in_2014_inflation_adjusted_dollars_population_25_years_and_over_with_earnings
+  ) |> 
+  select(zip_code, less_than_HS, HS_diploma, some_college, bachelors, median_income)
+
+museum_edu_df =
+  inner_join(museum_df, education_df)
 ```
 
