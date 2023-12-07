@@ -285,12 +285,81 @@ $(document).ready(function () {
 </div>
 
 
-<div id="about-this-site" class="section level3">
-<h3>About this site</h3>
-<p>Sometimes you need to say a bit about the site – how it was made,
-where it’s hosted, where the source code can be found.</p>
-<p>If this is for a project or analysis, I recommend giving some details
-about the R package versions that you used to create the content.</p>
+<div id="motivation" class="section level2">
+<h2>Motivation</h2>
+<p>Museums help to teach, inspire, and connect communities. As museums
+lovers, we believe that their presence (or lack thereof) likely has an
+effect on outcomes such as community educational attainment and
+potentially income and are excited to investigate this.</p>
+</div>
+<div id="initial-questions" class="section level2">
+<h2>Initial Questions</h2>
+<ul>
+<li>What is the make-up of museums, aquariums, and zoos in the United
+States?</li>
+<li></li>
+</ul>
+</div>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<div id="sources" class="section level3">
+<h3>Sources</h3>
+<p>We located a “Museums, Aquariums, and Zoos” dataset from the Institue
+of Museum and Library Services (IMLS) through <a
+href="https://www.kaggle.com/datasets/imls/museum-directory">Kaggle</a>.
+The dataset was compiled from IMLS administrative records for
+discretionary grant recipients, Internal Revenue Service (IRS) records
+for tax-exempt organizations, and private foundation grant recipients.
+The scan and compilation of data sources was done in 2014.</p>
+<p>For educational attainment and income data, we pulled from 2014
+American Community Survey. We downloaded the <a
+href="https://data.census.gov/table?q=education&amp;t=Educational%20Attainment&amp;g=010XX00US$8600000">S1501
+| Educational Attainment</a> dataset, which contains data of interest by
+zip code. The <a
+href="https://www.census.gov/programs-surveys/acs/about.html">ACS</a> is
+an annual survey that provides information about jobs, educational
+attainment, and more. The data tables that are released every year are
+accessible through <a href="census.gov">census.gov</a>.</p>
+</div>
+<div id="cleaning" class="section level3">
+<h3>Cleaning</h3>
+<p>Both datasets are .csv files, so they were both imported with
+<code>read_csv</code>. Variable names were cleaned with
+<code>janitor::clean_names</code> for both files as well. Unnecessary
+variables such as <code>phone_number</code> were removed from the
+museums dataset, and any museums that did not have an associated
+zip_code were removed with <code>drop_na</code>.</p>
+<p>The education (and income) dataset contained a large number of
+columns for each geographic area (zip code). The metadata file
+downloaded from data.census.gov was helpful in determining which columns
+were relevant to this analysis. To simplify the overall dataset, the
+variables that were ultimately selected were the total estimates of each
+educational attainment category – less than high school, high school
+diploma or equivalent, some college or associates degree, and bachelors
+degree or higher. These values are the estimated percentage of each zip
+code’s population. Additionally, the median income variable was
+selected, which is an estimate of the median earnings in the past 12
+months (in 2014) for the population by zip code. The variables had very
+long names, so these were renamed for ease of use in analysis and
+readability. The data comes from a sample of adults 25 and older.</p>
+<p>Finally, the two datasets were merged by zip code using
+<code>inner_join</code> so that only zip codes represented in both
+datasets were included. The final dataset contains information for 7907
+museums, aquariums, or zoos in the United States.</p>
+</div>
+</div>
+<div id="exploratory-analysis" class="section level2">
+<h2>Exploratory Analysis</h2>
+</div>
+<div id="regression-analysis" class="section level2">
+<h2>Regression Analysis</h2>
+</div>
+<div id="discussion" class="section level2">
+<h2>Discussion</h2>
+<div id="limitations" class="section level3">
+<h3>Limitations</h3>
+<p>data from 2013/14…</p>
+</div>
 </div>
 
 

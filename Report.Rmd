@@ -4,29 +4,42 @@ title: "Final Report"
 
 ## Motivation
 
-
+Museums help to teach, inspire, and connect communities. As museums lovers, we believe that their presence (or lack thereof) likely has an effect on outcomes such as community educational attainment and potentially income and are excited to investigate this.
 
 ## Initial Questions
 
-
+* What is the make-up of museums, aquariums, and zoos in the United States?
+* 
 
 ## Data
 
 ### Sources
 
+We located a "Museums, Aquariums, and Zoos" dataset from the Institue of Museum and Library Services (IMLS) through [Kaggle](https://www.kaggle.com/datasets/imls/museum-directory). The dataset was compiled from IMLS administrative records for discretionary grant recipients, Internal Revenue Service (IRS) records for tax-exempt organizations, and private foundation grant recipients. The scan and compilation of data sources was done in 2014.
 
+For educational attainment and income data, we pulled from 2014 American Community Survey. We downloaded the [S1501 | Educational Attainment](https://data.census.gov/table?q=education&t=Educational%20Attainment&g=010XX00US$8600000) dataset, which contains data of interest by zip code. The [ACS](https://www.census.gov/programs-surveys/acs/about.html) is an annual survey that provides information about jobs, educational attainment, and more. The data tables that are released every year are accessible through [census.gov](census.gov). 
 
 ### Cleaning
 
+Both datasets are .csv files, so they were both imported with `read_csv`. Variable names were cleaned with `janitor::clean_names` for both files as well. Unnecessary variables such as `phone_number` were removed from the museums dataset, and any museums that did not have an associated zip_code were removed with `drop_na`. 
 
+The education (and income) dataset contained a large number of columns for each geographic area (zip code). The metadata file downloaded from data.census.gov was helpful in determining which columns were relevant to this analysis. To simplify the overall dataset, the variables that were ultimately selected were the total estimates of each educational attainment category -- less than high school, high school diploma or equivalent, some college or associates degree, and bachelors degree or higher. These values are the estimated percentage of each zip code's population. Additionally, the median income variable was selected, which is an estimate of the median earnings in the past 12 months (in 2014) for the population by zip code. The variables had very long names, so these were renamed for ease of use in analysis and readability. The data comes from a sample of adults 25 and older.
+
+Finally, the two datasets were merged by zip code using `inner_join` so that only zip codes represented in both datasets were included. The final dataset contains information for `r nrow(museum_edu_df)` museums, aquariums, or zoos in the United States.
 
 ## Exploratory Analysis
 
 
 
-## Additional Analysis -- Regression
+## Regression Analysis
 
 
 
 ## Discussion
+
+
+
+### Limitations
+
+data from 2013/14...
 

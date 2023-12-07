@@ -42,6 +42,23 @@ museum_edu_df =
   inner_join(museum_df, education_df)
 ```
 
+### Museums Summary (NEEDS FORMATTING PEASE HELP -m)
+
+```{r, echo = FALSE}
+museum_edu_df |> 
+  group_by(museum_type) |> 
+  summarize(
+    n = n(),
+    mean_income = mean(income, na.rm = TRUE)) |> 
+  mutate(
+    museum_type = fct_reorder(as_factor(museum_type), mean_income),
+    text_label = str_c("Mean Income: $", mean_income)) |> 
+  plot_ly(x = ~museum_type, y = ~n, color = ~museum_type, 
+          type = "bar", colors = "viridis", text = ~text_label)
+```
+
+This bar chart displays the number of each type of museum in the United States. Museum types are sorted by their mean income, so art museums average the most income, followed by natural history museums, of which there are the least museums (n = 62). Historic preservations are represented the most (n = 3877), but have the least average income.
+
 ### U.S. States by Number of Museums/Zoos/Aquariums
 
 ```{r, echo = FALSE}
@@ -71,7 +88,7 @@ The above scatterplot shows the number of museums in a city by the average media
 
 ### Top 10 Museum Cities and Educational Attainment Distributions
 
-```{r}
+```{r, echo = FALSE}
 museum_edu_df |>
   group_by(city) |> 
   summarize(
