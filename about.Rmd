@@ -12,6 +12,6 @@ title: "About Us"
 
 ### Madison Goldrich
 
-<img src = "images/madison_headshot.jpeg" style = "width:75%">
+<img src = "images/madison_headshot.jpeg" style = "width:25%">
 
 Madison is a second-year MPH student at Mailman in the Department of Sociomedical Sciences with a Certificate in Applied Biostatistics and Public Health Data Science. This semester she is also a co-Lead TA for Quantitative Research Foundations in the MPH Core Curriculum.
