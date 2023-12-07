@@ -69,4 +69,21 @@ museum_edu_df |>
 
 The above scatterplot shows the number of museums in a city by the average median income of the population over 25 years. Only cities that have at least five museums are included. There does not appear to be much of a correlation, between the two variables; we can see this with the large amount of variation in income for the cities with 5 museums. Notably, New York City has 68 museums, and an average median annual income of $68.7K. Average median income is obtained by average the median income by zip codes within the city.
 
+### Top 10 Museum Cities and Educational Attainment Distributions
+
+```{r}
+museum_edu_df |>
+  group_by(city) |> 
+  summarize(
+    n_museums = n(),
+    est_less_than_HS = mean(less_than_HS, na.rm = TRUE),
+    est_HS_diploma = mean(HS_diploma, na.rm = TRUE),
+    est_some_college = mean(some_college, na.rm = TRUE),
+    est_bachelors = mean(bachelors, na.rm = TRUE)
+  ) |> 
+  filter(min_rank(desc(n_museums)) < 11) |> 
+  knitr::kable(digits = 2)
+```
+
+The above table shows the top 10 cities in the U.S. with the most museums, aquariums, or zoos, along with educational attainment estimates. Educational attainment categories are: less than high school, high school diploma or equivalent, some college or associates, and bachelors degree and above. The values are the estimated percentage of the population within each category, calculated by taking the mean estimated percentage across zip codes within the city.
 
