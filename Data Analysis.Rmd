@@ -70,8 +70,7 @@ The associated p-value is very small (2.73e-05). This indicates that the number 
 
 In summary, the results suggest a statistically significant,negative relationship between the number of museums and median income. 
 
-# Regression Model with both Highest Educational Attainment Category and Average Income: 
-## Is median income a confounder on the relationship between educational attainment and the amount of museums?
+# Is median income a confounder on the relationship between educational attainment and the amount of museums?
 ```{r}
 #linear regression model testing for confounding
 model3 = lm(formula = bachelors ~ median_income + n_museums, data = museum_edu_df)

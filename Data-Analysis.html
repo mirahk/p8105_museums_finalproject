@@ -471,15 +471,10 @@ significant in predicting median income.</p>
 relationship between the number of museums and median income.</p>
 </div>
 <div
-id="regression-model-with-both-highest-educational-attainment-category-and-average-income"
-class="section level1">
-<h1>Regression Model with both Highest Educational Attainment Category
-and Average Income:</h1>
-<div
 id="is-median-income-a-confounder-on-the-relationship-between-educational-attainment-and-the-amount-of-museums"
-class="section level2">
-<h2>Is median income a confounder on the relationship between
-educational attainment and the amount of museums?</h2>
+class="section level1">
+<h1>Is median income a confounder on the relationship between
+educational attainment and the amount of museums?</h1>
 <pre class="r"><code>#linear regression model testing for confounding
 model3 = lm(formula = bachelors ~ median_income + n_museums, data = museum_edu_df)
 
@@ -526,7 +521,6 @@ a 30% difference between the crude and unadjusted models, which is
 greater than 10%, signifying that income does infact confound the
 relationship between high educational attainment and amount of museums
 in a zipcode.</p>
-</div>
 </div>
 
 
