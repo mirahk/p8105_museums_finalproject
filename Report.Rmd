@@ -1,6 +1,14 @@
 ---
 title: "Final Report"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
+
+```{r}
+museum_edu_df <- read.csv("museum_edu_data.csv")
+```
 
 ## Motivation
 
