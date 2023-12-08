@@ -1,18 +1,18 @@
 ---
-title: "data analysis"
+title: "Data Analysis"
 output: 
   html_document:
     toc: true
     toc_float: true
 ---
 
-### Data Analysis
-
-```{r}
+```{r, include=FALSE}
 library(tidyverse)
 
 museum_edu_df <- read.csv("museum_edu_data.csv")
 ```
+
+# Is the number of people who hold college degrees significantly related to the amount of museums in their zip code?
 
 ```{r}
 # Count the number of museums per zip code
@@ -26,8 +26,11 @@ museum_edu_df <- left_join(museum_edu_df, museum_count_per_zip, by = c("zip_code
 # Linear regression: Number of Museums vs Highest Educational Attainment Category
 regression_model_bach <- lm(bachelors ~ n_museums, data = museum_edu_df)
 
-# Summary of the regression model
-summary(regression_model_bach)
+# Creating Regression Model Table
+regression_model_bach |>
+  broom::tidy() |>
+  select(term, estimate, p.value) |>
+  knitr::kable(digits=10)
 ```
 
 Intercept (Estimated Constant):
@@ -37,62 +40,52 @@ Coefficient for n_museums:
 The coefficient for n_museums is 0.17138. This represents the estimated change in the percentage of individuals with a bachelor's degree for each additional museum. The positive sign indicates a positive relationship, suggesting that, on average, as the number of museums increases, the percentage of individuals with a bachelor's degree also tends to increase.
 
 Statistical Significance:
-The t-value for n_museums is 5.223, and the associated p-value is very small (1.81e-07). This indicates that the number of museums is statistically significant in predicting the percentage of individuals with a bachelor's degree.
+The associated p-value is very small (1.81e-07). This indicates that the number of museums is statistically significant in predicting the percentage of individuals with a bachelor's degree.
 
-R-squared:
-The R-squared value is very low (0.003495), suggesting that the model explains only a small proportion (0.3495%) of the variability in the percentage of individuals with a bachelor's degree.
+In summary, the results suggest a statistically significant, positive relationship between the number of museums and the percentage of individuals with a bachelor's degree.
 
-F-statistic:
-The F-statistic tests the overall significance of the model. The small p-value (1.811e-07) indicates that the model is statistically significant as a whole.
 
-In summary, the results suggest a statistically significant, but weak, positive relationship between the number of museums and the percentage of individuals with a bachelor's degree. However, the low R-squared value indicates that the model does not explain much of the variability in the percentage of individuals with a bachelor's degree, and caution should be exercised when interpreting the practical significance of the relationship. Other factors not included in the model may also influence the percentage of individuals with a bachelor's degree.
+# Is the median income significantly related to the amount of museums in a zip code?
 
 ```{r}
-# Linear regression: Number of Museums vs lowest Educational Attainment Category
-regression_model_lessHS <- lm(less_than_HS ~ n_museums, data = museum_edu_df)
+#Linear regression model: museums and medium income
+regression_model_income <- lm(n_museums ~ median_income, data = museum_edu_df)
 
-# Summary of the regression model
-summary(regression_model_lessHS)
-```
-
-Intercept (Estimated Constant):
-The intercept is 16.08511. This is the estimated percentage of individuals with less than a high school education when the number of museums (n_museums) is zero. However, in practical terms, this value might not have a meaningful interpretation because it's unlikely for the number of museums to be zero in a given city.
-
-Coefficient for n_museums:
-The coefficient for n_museums is -0.06416. This represents the estimated change in the percentage of individuals with less than a high school education for each additional museum. The negative sign indicates a negative relationship, suggesting that, on average, as the number of museums increases, the percentage of individuals with less than a high school education tends to decrease.
-
-Statistical Significance:
-The t-value for n_museums is -1.943, and the associated p-value is 0.052. This p-value is slightly above the conventional significance level of 0.05. While it's not statistically significant at the 0.05 level, it is close, and the significance level is often a matter of convention.
-
-R-squared:
-The R-squared value is very low (0.0004854), suggesting that the model explains only a tiny proportion (0.04854%) of the variability in the percentage of individuals with less than a high school education.
-
-F-statistic:
-The F-statistic tests the overall significance of the model. The p-value for the F-statistic is 0.052, indicating that the overall model may not be statistically significant.
-
-In summary, the results suggest a potentially weak and marginally statistically significant negative relationship between the number of museums and the percentage of individuals with less than a high school education. However, the low R-squared value and the marginally significant p-value suggest that caution should be exercised when interpreting the practical significance of the relationship, and other factors not included in the model may also influence the percentage of individuals with less than a high school education.
-
-```{r}
-#Fit a linear regression model
-regression_model_income <- lm(median_income ~ n_museums, data = museum_edu_df)
-
-# Summarize the regression model
-summary(regression_model_income)
+# Creating Regression Model Table
+regression_model_income |>
+  broom::tidy() |>
+  select(term, estimate, p.value) |>
+  knitr::kable(digits=10)
 ```
 
 Intercept (Estimated Constant):
 
-The intercept is $37,533.96. This is the predicted median income when the number of museums (n_museums) is zero. However, in the context of the analysis, this value may not have a meaningful interpretation since it is unlikely for the number of museums to be zero in a given city.
-Coefficient for n_museums:
+The intercept is $37,533.96. This is the predicted median income when the number of museums (n_museums) is zero. 
 
+Coefficient for n_museums:
 The coefficient for n_museums is -156.74. This represents the estimated change in median income for each additional museum. The negative sign indicates a negative relationship, suggesting that, on average, as the number of museums increases, the median income tends to decrease.
+
 Statistical Significance:
+The associated p-value is very small (2.73e-05). This indicates that the number of museums is statistically significant in predicting median income.
 
-The t-value for n_museums is -4.197, and the associated p-value is very small (2.73e-05). This indicates that the number of museums is statistically significant in predicting median income.
-R-squared:
+In summary, the results suggest a statistically significant,negative relationship between the number of museums and median income. 
 
-The R-squared value is very low (0.002254), suggesting that the model explains only a small proportion (0.2254%) of the variability in median income.
-F-statistic:
+# Regression Model with both Highest Educational Attainment Category and Average Income: 
+## Is median income a confounder on the relationship between educational attainment and the amount of museums?
+```{r}
+#linear regression model testing for confounding
+model3 = lm(formula = bachelors ~ median_income + n_museums, data = museum_edu_df)
 
-The F-statistic tests the overall significance of the model. The small p-value (2.733e-05) indicates that the model is statistically significant as a whole.
-In summary, the results suggest a statistically significant, but weak, negative relationship between the number of museums and median income. However, the low R-squared value indicates that the model does not explain much of the variability in median income, and caution should be exercised when interpreting the practical significance of the relationship. Other factors not included in the model may also influence median income.
+# Creating Regression Model Table
+model3 |>
+  broom::tidy() |>
+  select(term, estimate, p.value) |>
+  knitr::kable(digits=10)
+```
+
+Intercept (Estimated Constant):
+The intercept is -7.350. This represents the estimated percentage of individuals with a bachelor's degree when the number of museums (n_museums) is zero and median income (median_income) is zero.
+
+Coefficient for n_museums:
+The coefficient for n_museums is 0.245. his represents the estimated change in the percentage of individuals with a bachelor's degree for each additional museum, adjusted for median income. 
+In the unadjusted model, the coefficient was: 0.17138. There is a 30% difference between the crude and unadjusted models, which is greater than 10%, signifying that income does infact confound the relationship between high educational attainment and amount of museums in a zipcode.
