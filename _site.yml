@@ -12,7 +12,7 @@ navbar:
     - text: "Data Analysis"
       href: Data-Analysis.html
     - icon: fa-envelope fa-lg
-      href: mailto:<tem2171@cumc.columbia.edu>,<mpg2166@cumc.columbia.edu>, <msk2265@cumc.columbia.edu>, <skh2164@cumc.columbia.edu>
+      href: mailto:"mailto:tem2171@cumc.columbia.edu;mpg2166@cumc.columbia.edu;msk2265@cumc.columbia.edu;skh2164@cumc.columbia.edu"
     - icon: fa-github fa-lg
       href: https://github.com/mirahk/p8105_museums_finalproject.github.io
 output:
