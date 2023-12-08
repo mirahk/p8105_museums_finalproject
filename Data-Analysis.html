@@ -550,7 +550,7 @@ class="section level2">
 cv1_df |&gt; 
   mutate(
     mod_1  = map(train, \(df) lm(bachelors ~ n_museums, data = museum_edu_df)),
-    mod_2  = map(train, \(df) lm(formula = bachelors ~ median_income + n_museums, data = museum_edu_df))) |&gt; 
+    mod_2  = map(train, \(df) lm(bachelors ~ median_income + n_museums, data = museum_edu_df))) |&gt; 
   mutate(
     rmse_1 = map2_dbl(mod_1, test, \(mod, df) rmse(model = mod, data = df)),
     rmse_2 = map2_dbl(mod_2, test, \(mod, df) rmse(model = mod, data = df))) |&gt;
@@ -563,8 +563,11 @@ cv1_df |&gt;
 model including income.</p>
 </div>
 </div>
-<div id="testing-for-interacton" class="section level1">
-<h1>Testing for interacton:</h1>
+<div
+id="testing-for-interaction-between-median-income-and-number-of-museums"
+class="section level1">
+<h1>Testing for Interaction between Median Income and Number of
+Museums</h1>
 <pre class="r"><code>#linear regression model testing for confounding
 model_int = lm(formula = bachelors ~ median_income + n_museums + median_income*n_museums, data = museum_edu_df)
 
@@ -606,6 +609,11 @@ model_int |&gt;
 </table>
 <p>E(bachelors) = β0 + β1(median_income) + β2(n_museums) +
 β3(median_income*n_museums)</p>
+<p>The significant interaction term in the model implies that the effect
+of n_museums on bachelors is not constant across all levels of
+median_income. In other words, the relationship between the number of
+museums (n_museums) and the likelihood of having a bachelor’s degree
+(bachelors) is influenced by the level of median_income.</p>
 <pre class="r"><code>cv2_df = 
   crossv_mc(museum_edu_df, 100) 
 

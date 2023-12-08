@@ -118,7 +118,7 @@ cv1_df =
 cv1_df |> 
   mutate(
     mod_1  = map(train, \(df) lm(bachelors ~ n_museums, data = museum_edu_df)),
-    mod_2  = map(train, \(df) lm(formula = bachelors ~ median_income + n_museums, data = museum_edu_df))) |> 
+    mod_2  = map(train, \(df) lm(bachelors ~ median_income + n_museums, data = museum_edu_df))) |> 
   mutate(
     rmse_1 = map2_dbl(mod_1, test, \(mod, df) rmse(model = mod, data = df)),
     rmse_2 = map2_dbl(mod_2, test, \(mod, df) rmse(model = mod, data = df))) |>
@@ -130,7 +130,7 @@ cv1_df |>
 
 The model excluding income has a much higher RMSE value than the model including income.
 
-# Testing for interacton:
+# Testing for Interaction between Median Income and Number of Museums
 ```{r}
 #linear regression model testing for confounding
 model_int = lm(formula = bachelors ~ median_income + n_museums + median_income*n_museums, data = museum_edu_df)
@@ -143,6 +143,8 @@ model_int |>
 ```
 
 E(bachelors) = β0 + β1(median_income) + β2(n_museums) + β3(median_income*n_museums)
+
+The significant interaction term in the model implies that the effect of n_museums on bachelors is not constant across all levels of median_income. In other words, the relationship between the number of museums (n_museums) and the likelihood of having a bachelor's degree (bachelors) is influenced by the level of median_income.
 
 ```{r}
 cv2_df = 
