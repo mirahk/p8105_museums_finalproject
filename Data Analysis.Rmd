@@ -35,6 +35,8 @@ regression_model_bach |>
   knitr::kable(digits=10)
 ```
 
+E(bachelors) = β0 + β1(museum_n)
+
 Intercept (Estimated Constant):
 The intercept is 10.39586. This is the estimated percentage of individuals with a bachelor's degree when the number of museums (n_museums) is zero. However, in practical terms, this value might not have a meaningful interpretation because it's unlikely for the number of museums to be zero in a given city.
 
@@ -60,6 +62,8 @@ regression_model_income |>
   knitr::kable(digits=10)
 ```
 
+E(n_museums) = β0 + β1(median_income)
+
 Intercept (Estimated Constant):
 
 The intercept is $37,533.96. This is the predicted median income when the number of museums (n_museums) is zero. 
@@ -84,7 +88,7 @@ model3 |>
   knitr::kable(digits=10)
 ```
 
-E(bachelors) = -7.35 + 0.0004746 * median_income + 0.2448 * n_museums
+E(bachelors) = β0 + β1(median_income) + β2(n_museums)
 
 Intercept (Estimated Constant):
 The intercept is -7.350. This represents the estimated percentage of individuals with a bachelor's degree when the number of museums (n_museums) is zero and median income (median_income) is zero.
@@ -132,11 +136,13 @@ The model excluding income has a much higher RMSE value than the model including
 model_int = lm(formula = bachelors ~ median_income + n_museums + median_income*n_museums, data = museum_edu_df)
 
 # Creating Regression Model Table
-model3 |>
+model_int |>
   broom::tidy() |>
   select(term, estimate, p.value) |>
   knitr::kable(digits=10)
 ```
+
+E(bachelors) = β0 + β1(median_income) + β2(n_museums) + β3(median_income*n_museums)
 
 ```{r}
 cv2_df = 

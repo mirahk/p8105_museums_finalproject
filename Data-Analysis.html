@@ -403,6 +403,7 @@ regression_model_bach |&gt;
 </tr>
 </tbody>
 </table>
+<p>E(bachelors) = β0 + β1(museum_n)</p>
 <p>Intercept (Estimated Constant): The intercept is 10.39586. This is
 the estimated percentage of individuals with a bachelor’s degree when
 the number of museums (n_museums) is zero. However, in practical terms,
@@ -456,6 +457,7 @@ regression_model_income |&gt;
 </tr>
 </tbody>
 </table>
+<p>E(n_museums) = β0 + β1(median_income)</p>
 <p>Intercept (Estimated Constant):</p>
 <p>The intercept is $37,533.96. This is the predicted median income when
 the number of museums (n_museums) is zero.</p>
@@ -509,8 +511,7 @@ model3 |&gt;
 </tr>
 </tbody>
 </table>
-<p>E(bachelors) = -7.35 + 0.0004746 * median_income + 0.2448 *
-n_museums</p>
+<p>E(bachelors) = β0 + β1(median_income) + β2(n_museums)</p>
 <p>Intercept (Estimated Constant): The intercept is -7.350. This
 represents the estimated percentage of individuals with a bachelor’s
 degree when the number of museums (n_museums) is zero and median income
@@ -568,7 +569,7 @@ model including income.</p>
 model_int = lm(formula = bachelors ~ median_income + n_museums + median_income*n_museums, data = museum_edu_df)
 
 # Creating Regression Model Table
-model3 |&gt;
+model_int |&gt;
   broom::tidy() |&gt;
   select(term, estimate, p.value) |&gt;
   knitr::kable(digits=10)</code></pre>
@@ -583,21 +584,28 @@ model3 |&gt;
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">-7.3496990801</td>
-<td align="right">0</td>
+<td align="right">-2.2849540454</td>
+<td align="right">6.528e-07</td>
 </tr>
 <tr class="even">
 <td align="left">median_income</td>
-<td align="right">0.0004745601</td>
-<td align="right">0</td>
+<td align="right">0.0002901590</td>
+<td align="right">0.000e+00</td>
 </tr>
 <tr class="odd">
 <td align="left">n_museums</td>
-<td align="right">0.2448004363</td>
-<td align="right">0</td>
+<td align="right">-2.3996940174</td>
+<td align="right">0.000e+00</td>
+</tr>
+<tr class="even">
+<td align="left">median_income:n_museums</td>
+<td align="right">0.0000986444</td>
+<td align="right">0.000e+00</td>
 </tr>
 </tbody>
 </table>
+<p>E(bachelors) = β0 + β1(median_income) + β2(n_museums) +
+β3(median_income*n_museums)</p>
 <pre class="r"><code>cv2_df = 
   crossv_mc(museum_edu_df, 100) 
 
