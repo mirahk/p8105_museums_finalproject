@@ -100,16 +100,6 @@ Coefficient for n_museums:
 The coefficient for n_museums is 0.245. his represents the estimated change in the percentage of individuals with a bachelor's degree for each additional museum, adjusted for median income. 
 In the unadjusted model, the coefficient was: 0.17138. There is a 30% difference between the crude and unadjusted models, which is greater than 10%, signifying that income does infact confound the relationship between high educational attainment and amount of museums in a zipcode.
 
-## Plot of model residuals against fitted values:
-```{r}
-museum_edu_df |>
-  modelr::add_residuals(model3) |>
-  modelr::add_predictions(model3) |>
-  ggplot(aes(x=resid, y=pred)) + geom_point(alpha=0.5, size=0.5)
-```
-
-the plot of model residuals vs fitted values is clustered around 0, with the average predicted value being approximately 10. The cluster is pretty tight, however there are some outliars. 
-
 ## Comparison of models including income and excluding income
 ```{r}
 cv1_df = 
@@ -128,7 +118,7 @@ cv1_df |>
   ggplot(aes(x=model, y=rmse)) + geom_violin()
 ```
 
-The model excluding income has a much higher RMSE value than the model including income.
+The model excluding income has a much higher root mean squared errors (RMSE) value than the model including income.
 
 # Testing for Interaction between Median Income and Number of Museums
 ```{r}
@@ -146,16 +136,7 @@ E(bachelors) = β0 + β1(median_income) + β2(n_museums) + β3(median_income*n_m
 
 The significant interaction term in the model implies that the effect of n_museums on bachelors is not constant across all levels of median_income. In other words, the relationship between the number of museums (n_museums) and the likelihood of having a bachelor's degree (bachelors) is influenced by the level of median_income.
 
-## Plot of model residuals against fitted values:
-```{r}
-museum_edu_df |>
-  modelr::add_residuals(model_int) |>
-  modelr::add_predictions(model_int) |>
-  ggplot(aes(x=resid, y=pred)) + geom_point(alpha=0.5, size=0.5)
-```
-
-the plot of model residuals vs fitted values is clustered around 0, with the average predicted value being approximately 12. The cluster is pretty tight, however there are some outliars. It looks very similar to the plot of model residuals against fitted values for the model without the interaction term, however the cluster is slightly higher on the plot.
-
+## Comparison of income including models with and without interaction term:
 ```{r}
 cv2_df = 
   crossv_mc(museum_edu_df, 100) 
