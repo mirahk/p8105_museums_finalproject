@@ -11,7 +11,7 @@
 
 
 
-<title>Data Analysis</title>
+<title>data analysis</title>
 
 <script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,6 +29,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -221,6 +224,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -228,6 +294,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -280,17 +356,201 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Data Analysis</h1>
+<h1 class="title toc-ignore">data analysis</h1>
 
 </div>
 
 
 <div id="data-analysis" class="section level3">
 <h3>Data Analysis</h3>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.3     ✔ readr     2.1.4
+## ✔ forcats   1.0.0     ✔ stringr   1.5.0
+## ✔ ggplot2   3.4.3     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+## ✔ purrr     1.0.2     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>museum_edu_df &lt;- read.csv(&quot;museum_edu_data.csv&quot;)</code></pre>
+<pre class="r"><code># Count the number of museums per zip code
+museum_count_per_zip &lt;- museum_edu_df |&gt;
+  group_by(zip_code) |&gt;
+  summarize(n_museums = n())
+
+# Merge the museum count back into the main dataset
+museum_edu_df &lt;- left_join(museum_edu_df, museum_count_per_zip, by = c(&quot;zip_code&quot;), suffix = c(&quot;.museum_count_per_zip&quot;, &quot;.museum_edu_df&quot;))
+
+# Linear regression: Number of Museums vs Highest Educational Attainment Category
+regression_model_bach &lt;- lm(bachelors ~ n_museums, data = museum_edu_df)
+
+# Summary of the regression model
+summary(regression_model_bach)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = bachelors ~ n_museums, data = museum_edu_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -11.253  -7.689  -3.467   3.890  89.433 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 10.39586    0.15043  69.108  &lt; 2e-16 ***
+## n_museums    0.17138    0.03281   5.223 1.81e-07 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 11.93 on 7777 degrees of freedom
+##   (128 observations deleted due to missingness)
+## Multiple R-squared:  0.003495,   Adjusted R-squared:  0.003367 
+## F-statistic: 27.27 on 1 and 7777 DF,  p-value: 1.811e-07</code></pre>
+<p>Intercept (Estimated Constant): The intercept is 10.39586. This is
+the estimated percentage of individuals with a bachelor’s degree when
+the number of museums (n_museums) is zero. However, in practical terms,
+this value might not have a meaningful interpretation because it’s
+unlikely for the number of museums to be zero in a given city.</p>
+<p>Coefficient for n_museums: The coefficient for n_museums is 0.17138.
+This represents the estimated change in the percentage of individuals
+with a bachelor’s degree for each additional museum. The positive sign
+indicates a positive relationship, suggesting that, on average, as the
+number of museums increases, the percentage of individuals with a
+bachelor’s degree also tends to increase.</p>
+<p>Statistical Significance: The t-value for n_museums is 5.223, and the
+associated p-value is very small (1.81e-07). This indicates that the
+number of museums is statistically significant in predicting the
+percentage of individuals with a bachelor’s degree.</p>
+<p>R-squared: The R-squared value is very low (0.003495), suggesting
+that the model explains only a small proportion (0.3495%) of the
+variability in the percentage of individuals with a bachelor’s
+degree.</p>
+<p>F-statistic: The F-statistic tests the overall significance of the
+model. The small p-value (1.811e-07) indicates that the model is
+statistically significant as a whole.</p>
+<p>In summary, the results suggest a statistically significant, but
+weak, positive relationship between the number of museums and the
+percentage of individuals with a bachelor’s degree. However, the low
+R-squared value indicates that the model does not explain much of the
+variability in the percentage of individuals with a bachelor’s degree,
+and caution should be exercised when interpreting the practical
+significance of the relationship. Other factors not included in the
+model may also influence the percentage of individuals with a bachelor’s
+degree.</p>
+<pre class="r"><code># Linear regression: Number of Museums vs lowest Educational Attainment Category
+regression_model_lessHS &lt;- lm(less_than_HS ~ n_museums, data = museum_edu_df)
+
+# Summary of the regression model
+summary(regression_model_lessHS)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = less_than_HS ~ n_museums, data = museum_edu_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -16.021  -7.957  -1.821   5.443  84.107 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 16.08511    0.15133 106.290   &lt;2e-16 ***
+## n_museums   -0.06416    0.03301  -1.943    0.052 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 12 on 7777 degrees of freedom
+##   (128 observations deleted due to missingness)
+## Multiple R-squared:  0.0004854,  Adjusted R-squared:  0.0003569 
+## F-statistic: 3.777 on 1 and 7777 DF,  p-value: 0.052</code></pre>
+<p>Intercept (Estimated Constant): The intercept is 16.08511. This is
+the estimated percentage of individuals with less than a high school
+education when the number of museums (n_museums) is zero. However, in
+practical terms, this value might not have a meaningful interpretation
+because it’s unlikely for the number of museums to be zero in a given
+city.</p>
+<p>Coefficient for n_museums: The coefficient for n_museums is -0.06416.
+This represents the estimated change in the percentage of individuals
+with less than a high school education for each additional museum. The
+negative sign indicates a negative relationship, suggesting that, on
+average, as the number of museums increases, the percentage of
+individuals with less than a high school education tends to
+decrease.</p>
+<p>Statistical Significance: The t-value for n_museums is -1.943, and
+the associated p-value is 0.052. This p-value is slightly above the
+conventional significance level of 0.05. While it’s not statistically
+significant at the 0.05 level, it is close, and the significance level
+is often a matter of convention.</p>
+<p>R-squared: The R-squared value is very low (0.0004854), suggesting
+that the model explains only a tiny proportion (0.04854%) of the
+variability in the percentage of individuals with less than a high
+school education.</p>
+<p>F-statistic: The F-statistic tests the overall significance of the
+model. The p-value for the F-statistic is 0.052, indicating that the
+overall model may not be statistically significant.</p>
+<p>In summary, the results suggest a potentially weak and marginally
+statistically significant negative relationship between the number of
+museums and the percentage of individuals with less than a high school
+education. However, the low R-squared value and the marginally
+significant p-value suggest that caution should be exercised when
+interpreting the practical significance of the relationship, and other
+factors not included in the model may also influence the percentage of
+individuals with less than a high school education.</p>
+<pre class="r"><code>#Fit a linear regression model
+regression_model_income &lt;- lm(median_income ~ n_museums, data = museum_edu_df)
+
+# Summarize the regression model
+summary(regression_model_income)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = median_income ~ n_museums, data = museum_edu_df)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -34227  -8107  -3556   4623 166024 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 37533.96     170.96 219.552  &lt; 2e-16 ***
+## n_museums    -156.74      37.34  -4.197 2.73e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 13580 on 7799 degrees of freedom
+##   (106 observations deleted due to missingness)
+## Multiple R-squared:  0.002254,   Adjusted R-squared:  0.002126 
+## F-statistic: 17.62 on 1 and 7799 DF,  p-value: 2.733e-05</code></pre>
+<p>Intercept (Estimated Constant):</p>
+<p>The intercept is $37,533.96. This is the predicted median income when
+the number of museums (n_museums) is zero. However, in the context of
+the analysis, this value may not have a meaningful interpretation since
+it is unlikely for the number of museums to be zero in a given city.
+Coefficient for n_museums:</p>
+<p>The coefficient for n_museums is -156.74. This represents the
+estimated change in median income for each additional museum. The
+negative sign indicates a negative relationship, suggesting that, on
+average, as the number of museums increases, the median income tends to
+decrease. Statistical Significance:</p>
+<p>The t-value for n_museums is -4.197, and the associated p-value is
+very small (2.73e-05). This indicates that the number of museums is
+statistically significant in predicting median income. R-squared:</p>
+<p>The R-squared value is very low (0.002254), suggesting that the model
+explains only a small proportion (0.2254%) of the variability in median
+income. F-statistic:</p>
+<p>The F-statistic tests the overall significance of the model. The
+small p-value (2.733e-05) indicates that the model is statistically
+significant as a whole. In summary, the results suggest a statistically
+significant, but weak, negative relationship between the number of
+museums and median income. However, the low R-squared value indicates
+that the model does not explain much of the variability in median
+income, and caution should be exercised when interpreting the practical
+significance of the relationship. Other factors not included in the
+model may also influence median income.</p>
 </div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -323,6 +583,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
