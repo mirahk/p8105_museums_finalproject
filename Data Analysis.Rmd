@@ -146,6 +146,16 @@ E(bachelors) = β0 + β1(median_income) + β2(n_museums) + β3(median_income*n_m
 
 The significant interaction term in the model implies that the effect of n_museums on bachelors is not constant across all levels of median_income. In other words, the relationship between the number of museums (n_museums) and the likelihood of having a bachelor's degree (bachelors) is influenced by the level of median_income.
 
+## Plot of model residuals against fitted values:
+```{r}
+museum_edu_df |>
+  modelr::add_residuals(model_int) |>
+  modelr::add_predictions(model_int) |>
+  ggplot(aes(x=resid, y=pred)) + geom_point(alpha=0.5, size=0.5)
+```
+
+the plot of model residuals vs fitted values is clustered around 0, with the average predicted value being approximately 12. The cluster is pretty tight, however there are some outliars. It looks very similar to the plot of model residuals against fitted values for the model without the interaction term, however the cluster is slightly higher on the plot.
+
 ```{r}
 cv2_df = 
   crossv_mc(museum_edu_df, 100) 
