@@ -527,6 +527,96 @@ a 30% difference between the crude and unadjusted models, which is
 greater than 10%, signifying that income does infact confound the
 relationship between high educational attainment and amount of museums
 in a zipcode.</p>
+<div id="plot-of-model-residuals-against-fitted-values"
+class="section level2">
+<h2>Plot of model residuals against fitted values:</h2>
+<pre class="r"><code>museum_edu_df |&gt;
+  modelr::add_residuals(model3) |&gt;
+  modelr::add_predictions(model3) |&gt;
+  ggplot(aes(x=resid, y=pred)) + geom_point(alpha=0.5, size=0.5)</code></pre>
+<pre><code>## Warning: Removed 170 rows containing missing values (`geom_point()`).</code></pre>
+<p><img src="Data-Analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>the plot of model residuals vs fitted values is clustered around 0,
+with the average predicted value being approximately 10. The cluster is
+pretty tight, however there are some outliars.</p>
+</div>
+<div id="comparison-of-models-including-income-and-excluding-income"
+class="section level2">
+<h2>Comparison of models including income and excluding income</h2>
+<pre class="r"><code>cv1_df = 
+  crossv_mc(museum_edu_df, 100) 
+
+cv1_df |&gt; 
+  mutate(
+    mod_1  = map(train, \(df) lm(bachelors ~ n_museums, data = museum_edu_df)),
+    mod_2  = map(train, \(df) lm(formula = bachelors ~ median_income + n_museums, data = museum_edu_df))) |&gt; 
+  mutate(
+    rmse_1 = map2_dbl(mod_1, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_2 = map2_dbl(mod_2, test, \(mod, df) rmse(model = mod, data = df))) |&gt;
+  select(starts_with(&quot;rmse&quot;)) |&gt;
+  pivot_longer(
+    everything(), names_to=&quot;model&quot;, values_to=&quot;rmse&quot;, names_prefix=&quot;rmse_&quot;) |&gt;
+  ggplot(aes(x=model, y=rmse)) + geom_violin()</code></pre>
+<p><img src="Data-Analysis_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>The model excluding income has a much higher RMSE value than the
+model including income.</p>
+</div>
+</div>
+<div id="testing-for-interacton" class="section level1">
+<h1>Testing for interacton:</h1>
+<pre class="r"><code>#linear regression model testing for confounding
+model_int = lm(formula = bachelors ~ median_income + n_museums + median_income*n_museums, data = museum_edu_df)
+
+# Creating Regression Model Table
+model3 |&gt;
+  broom::tidy() |&gt;
+  select(term, estimate, p.value) |&gt;
+  knitr::kable(digits=10)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-7.3496990801</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">median_income</td>
+<td align="right">0.0004745601</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">n_museums</td>
+<td align="right">0.2448004363</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>cv2_df = 
+  crossv_mc(museum_edu_df, 100) 
+
+cv2_df |&gt; 
+  mutate(
+    mod_1  = map(train, \(df) lm(formula = bachelors ~ median_income + n_museums + median_income*n_museums, data = museum_edu_df)),
+    mod_2  = map(train, \(df) lm(formula = bachelors ~ median_income + n_museums, data = museum_edu_df))) |&gt; 
+  mutate(
+    rmse_1 = map2_dbl(mod_1, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_2 = map2_dbl(mod_2, test, \(mod, df) rmse(model = mod, data = df))) |&gt;
+  select(starts_with(&quot;rmse&quot;)) |&gt;
+  pivot_longer(
+    everything(), names_to=&quot;model&quot;, values_to=&quot;rmse&quot;, names_prefix=&quot;rmse_&quot;) |&gt;
+  ggplot(aes(x=model, y=rmse)) + geom_violin()</code></pre>
+<p><img src="Data-Analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>The model with an interaction term between bachelors and median
+income has a lower RMSE value than the model without an interaction
+term. Ultimately, the model with interaction terms appears to be the
+best model.</p>
 </div>
 
 

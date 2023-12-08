@@ -8,7 +8,9 @@ output:
 
 ```{r, include=FALSE}
 library(tidyverse)
+library(modelr)
 
+set.seed(1)
 museum_edu_df <- read.csv("museum_edu_data.csv")
 ```
 
@@ -93,3 +95,64 @@ The p-values associated with each coefficient are very small (<2×10^−16), ind
 Coefficient for n_museums:
 The coefficient for n_museums is 0.245. his represents the estimated change in the percentage of individuals with a bachelor's degree for each additional museum, adjusted for median income. 
 In the unadjusted model, the coefficient was: 0.17138. There is a 30% difference between the crude and unadjusted models, which is greater than 10%, signifying that income does infact confound the relationship between high educational attainment and amount of museums in a zipcode.
+
+## Plot of model residuals against fitted values:
+```{r}
+museum_edu_df |>
+  modelr::add_residuals(model3) |>
+  modelr::add_predictions(model3) |>
+  ggplot(aes(x=resid, y=pred)) + geom_point(alpha=0.5, size=0.5)
+```
+
+the plot of model residuals vs fitted values is clustered around 0, with the average predicted value being approximately 10. The cluster is pretty tight, however there are some outliars. 
+
+## Comparison of models including income and excluding income
+```{r}
+cv1_df = 
+  crossv_mc(museum_edu_df, 100) 
+
+cv1_df |> 
+  mutate(
+    mod_1  = map(train, \(df) lm(bachelors ~ n_museums, data = museum_edu_df)),
+    mod_2  = map(train, \(df) lm(formula = bachelors ~ median_income + n_museums, data = museum_edu_df))) |> 
+  mutate(
+    rmse_1 = map2_dbl(mod_1, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_2 = map2_dbl(mod_2, test, \(mod, df) rmse(model = mod, data = df))) |>
+  select(starts_with("rmse")) |>
+  pivot_longer(
+    everything(), names_to="model", values_to="rmse", names_prefix="rmse_") |>
+  ggplot(aes(x=model, y=rmse)) + geom_violin()
+```
+
+The model excluding income has a much higher RMSE value than the model including income.
+
+# Testing for interacton:
+```{r}
+#linear regression model testing for confounding
+model_int = lm(formula = bachelors ~ median_income + n_museums + median_income*n_museums, data = museum_edu_df)
+
+# Creating Regression Model Table
+model3 |>
+  broom::tidy() |>
+  select(term, estimate, p.value) |>
+  knitr::kable(digits=10)
+```
+
+```{r}
+cv2_df = 
+  crossv_mc(museum_edu_df, 100) 
+
+cv2_df |> 
+  mutate(
+    mod_1  = map(train, \(df) lm(formula = bachelors ~ median_income + n_museums + median_income*n_museums, data = museum_edu_df)),
+    mod_2  = map(train, \(df) lm(formula = bachelors ~ median_income + n_museums, data = museum_edu_df))) |> 
+  mutate(
+    rmse_1 = map2_dbl(mod_1, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_2 = map2_dbl(mod_2, test, \(mod, df) rmse(model = mod, data = df))) |>
+  select(starts_with("rmse")) |>
+  pivot_longer(
+    everything(), names_to="model", values_to="rmse", names_prefix="rmse_") |>
+  ggplot(aes(x=model, y=rmse)) + geom_violin()
+```
+
+The model with an interaction term between bachelors and median income has a lower RMSE value than the model without an interaction term. Ultimately, the model with interaction terms appears to be the best model.
