@@ -1,5 +1,9 @@
 ---
 title: "About Us"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ## Meet the Group!
@@ -9,6 +13,9 @@ title: "About Us"
 ### Sarah Haberlack
 
 ### Teresa Moore
+<img src = "images/IMG_3208.JPG" style = "width:25%">
+
+Teresa is a second year MPH student in the department of Epidemiology with a certificate in Applied Biostatistics and Public Health Data.
 
 ### Madison Goldrich
 
