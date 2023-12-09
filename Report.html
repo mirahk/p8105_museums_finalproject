@@ -35,6 +35,13 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.3/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
 <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
@@ -361,20 +368,29 @@ div.tocify {
 </div>
 
 
-<pre class="r"><code>museum_edu_df &lt;- read.csv(&quot;museum_edu_data.csv&quot;)</code></pre>
 <div id="motivation" class="section level2">
 <h2>Motivation</h2>
-<p>Museums help to teach, inspire, and connect communities. As museums
-lovers, we believe that their presence (or lack thereof) likely has an
-effect on outcomes such as community educational attainment and
-potentially income and are excited to investigate this.</p>
+<p>Museums teach, challenge, inspire, and connect communities. Cultural
+institutions such as museums hold our collective memory and create
+spaces for people to grapple with complex histories and understand how
+they shape today’s reality. Moreover, museums inspire engagement,
+debate, and reflection, providing intellectual stimulation. As museums
+lovers, we suspect that presence of museums in a city may influence life
+outcomes such as community-level educational attainment. However, we
+understand that income level may be a common cause of amount of museums
+in an area and educational achievement. Thus, we decided to investigate
+the relationship between museums and educational achievement with income
+as a possible confounder.</p>
 </div>
 <div id="initial-questions" class="section level2">
 <h2>Initial Questions</h2>
 <ul>
-<li>What is the make-up of museums, aquariums, and zoos in the United
-States?</li>
-<li></li>
+<li>Which areas of the United States have the most and fewest
+museums?</li>
+<li>Is the amount of museums in a zip code related to the average
+educational attainment level of its residents?</li>
+<li>Does income confound the relationship between average educational
+attainment level and amount of museums in a zip code?</li>
 </ul>
 </div>
 <div id="data" class="section level2">
@@ -427,46 +443,498 @@ museums, aquariums, or zoos in the United States.</p>
 </div>
 <div id="exploratory-analysis" class="section level2">
 <h2>Exploratory Analysis</h2>
+<p>Initially, we knew that we wanted to better understand the
+relationship between presence of museums and educational attainment.
+However, we were not yet sure how narrow our spatial unit would need to
+be to start to observe trends. In our exploratory data analysis, we
+examined educational attainment and median income by state and city.</p>
+<div id="museum-types-across-the-united-states" class="section level3">
+<h3>Museum Types across the United States</h3>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-c1986cb1a18a92898e65" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-c1986cb1a18a92898e65">{"x":{"visdat":{"1443833b4d23f":["function () ","plotlyVisDat"]},"cur_data":"1443833b4d23f","attrs":{"1443833b4d23f":{"x":{},"y":{},"text":{},"color":{},"colors":"viridis","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"Museum type","type":"category","categoryorder":"array","categoryarray":["Historic Preservation","Children's","General","Science & Tech/Planetarium","History","Arboretum/Botanical Garden","Zoo/Aquarium/Wildlife Conservation","NATURAL History","Art"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Frequency"},"legend":{"title":{"text":"<b> Museum type <\/b>"}},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["Historic Preservation"],"y":[3877],"text":"Mean Income: $320873.91405806","type":"bar","name":"Historic Preservation","marker":{"color":"rgba(68,1,84,1)","line":{"color":"rgba(68,1,84,1)"}},"textfont":{"color":"rgba(68,1,84,1)"},"error_y":{"color":"rgba(68,1,84,1)"},"error_x":{"color":"rgba(68,1,84,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Children's"],"y":[142],"text":"Mean Income: $1214949.12121212","type":"bar","name":"Children's","marker":{"color":"rgba(71,45,123,1)","line":{"color":"rgba(71,45,123,1)"}},"textfont":{"color":"rgba(71,45,123,1)"},"error_y":{"color":"rgba(71,45,123,1)"},"error_x":{"color":"rgba(71,45,123,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["General"],"y":[1680],"text":"Mean Income: $3232530.51939456","type":"bar","name":"General","marker":{"color":"rgba(59,82,139,1)","line":{"color":"rgba(59,82,139,1)"}},"textfont":{"color":"rgba(59,82,139,1)"},"error_y":{"color":"rgba(59,82,139,1)"},"error_x":{"color":"rgba(59,82,139,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Science & Tech/Planetarium"],"y":[432],"text":"Mean Income: $3372306.70103093","type":"bar","name":"Science & Tech/Planetarium","marker":{"color":"rgba(44,114,142,1)","line":{"color":"rgba(44,114,142,1)"}},"textfont":{"color":"rgba(44,114,142,1)"},"error_y":{"color":"rgba(44,114,142,1)"},"error_x":{"color":"rgba(44,114,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["History"],"y":[619],"text":"Mean Income: $4064084.45084747","type":"bar","name":"History","marker":{"color":"rgba(33,144,141,1)","line":{"color":"rgba(33,144,141,1)"}},"textfont":{"color":"rgba(33,144,141,1)"},"error_y":{"color":"rgba(33,144,141,1)"},"error_x":{"color":"rgba(33,144,141,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Arboretum/Botanical Garden"],"y":[563],"text":"Mean Income: $4543363.34020619","type":"bar","name":"Arboretum/Botanical Garden","marker":{"color":"rgba(39,173,129,1)","line":{"color":"rgba(39,173,129,1)"}},"textfont":{"color":"rgba(39,173,129,1)"},"error_y":{"color":"rgba(39,173,129,1)"},"error_x":{"color":"rgba(39,173,129,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Zoo/Aquarium/Wildlife Conservation"],"y":[193],"text":"Mean Income: $4875234.85714286","type":"bar","name":"Zoo/Aquarium/Wildlife Conservation","marker":{"color":"rgba(93,200,99,1)","line":{"color":"rgba(93,200,99,1)"}},"textfont":{"color":"rgba(93,200,99,1)"},"error_y":{"color":"rgba(93,200,99,1)"},"error_x":{"color":"rgba(93,200,99,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["NATURAL History"],"y":[62],"text":"Mean Income: $5891407.13461538","type":"bar","name":"NATURAL History","marker":{"color":"rgba(170,220,50,1)","line":{"color":"rgba(170,220,50,1)"}},"textfont":{"color":"rgba(170,220,50,1)"},"error_y":{"color":"rgba(170,220,50,1)"},"error_x":{"color":"rgba(170,220,50,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Art"],"y":[339],"text":"Mean Income: $69969089.4868914","type":"bar","name":"Art","marker":{"color":"rgba(253,231,37,1)","line":{"color":"rgba(253,231,37,1)"}},"textfont":{"color":"rgba(253,231,37,1)"},"error_y":{"color":"rgba(253,231,37,1)"},"error_x":{"color":"rgba(253,231,37,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>This bar chart displays the number of each museum type across the
+United States, sorted by increasing mean income. Art museums have the
+highest mean income of all museum types (just under 70 million dollars
+per year), but are relatively uncommon. Natural history museums have the
+second highest mean income (just under 6 million dollars per year), but
+the lowest frequency of museums (n = 62). Historic preservation museums
+are represented the most (n = 3877), but have the least average income
+(~300,000 dollars per year).</p>
+</div>
+<div id="u.s.-states-by-number-of-museumszoosaquariums"
+class="section level3">
+<h3>U.S. States by Number of Museums/Zoos/Aquariums</h3>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-37c2820379c5a3dbdcff" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-37c2820379c5a3dbdcff">{"x":{"visdat":{"144385c5357b5":["function () ","plotlyVisDat"]},"cur_data":"144385c5357b5","attrs":{"144385c5357b5":{"x":{},"y":{},"color":{},"colors":"viridis","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"State","type":"category","categoryorder":"array","categoryarray":["MS","DE","NV","UT","DC","HI","SD","ID","ND","AK","RI","WV","WY","NM","AZ","AR","LA","SC","MT","AL","KY","NH","VT","OK","NE","TN","GA","OR","IA","MD","KS","IN","MO","NJ","CO","MN","CT","NC","FL","ME","WA","VA","WI","MI","MA","IL","OH","PA","TX","CA","NY"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Frequency"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["MS"],"y":[33],"type":"bar","name":"MS","marker":{"color":"rgba(68,1,84,1)","line":{"color":"rgba(68,1,84,1)"}},"textfont":{"color":"rgba(68,1,84,1)"},"error_y":{"color":"rgba(68,1,84,1)"},"error_x":{"color":"rgba(68,1,84,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["DE"],"y":[35],"type":"bar","name":"DE","marker":{"color":"rgba(70,8,92,1)","line":{"color":"rgba(70,8,92,1)"}},"textfont":{"color":"rgba(70,8,92,1)"},"error_y":{"color":"rgba(70,8,92,1)"},"error_x":{"color":"rgba(70,8,92,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["NV"],"y":[38],"type":"bar","name":"NV","marker":{"color":"rgba(71,16,99,1)","line":{"color":"rgba(71,16,99,1)"}},"textfont":{"color":"rgba(71,16,99,1)"},"error_y":{"color":"rgba(71,16,99,1)"},"error_x":{"color":"rgba(71,16,99,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["UT"],"y":[38],"type":"bar","name":"UT","marker":{"color":"rgba(72,23,105,1)","line":{"color":"rgba(72,23,105,1)"}},"textfont":{"color":"rgba(72,23,105,1)"},"error_y":{"color":"rgba(72,23,105,1)"},"error_x":{"color":"rgba(72,23,105,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["DC"],"y":[42],"type":"bar","name":"DC","marker":{"color":"rgba(72,30,111,1)","line":{"color":"rgba(72,30,111,1)"}},"textfont":{"color":"rgba(72,30,111,1)"},"error_y":{"color":"rgba(72,30,111,1)"},"error_x":{"color":"rgba(72,30,111,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["HI"],"y":[43],"type":"bar","name":"HI","marker":{"color":"rgba(72,37,117,1)","line":{"color":"rgba(72,37,117,1)"}},"textfont":{"color":"rgba(72,37,117,1)"},"error_y":{"color":"rgba(72,37,117,1)"},"error_x":{"color":"rgba(72,37,117,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["SD"],"y":[49],"type":"bar","name":"SD","marker":{"color":"rgba(71,43,122,1)","line":{"color":"rgba(71,43,122,1)"}},"textfont":{"color":"rgba(71,43,122,1)"},"error_y":{"color":"rgba(71,43,122,1)"},"error_x":{"color":"rgba(71,43,122,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["ID"],"y":[50],"type":"bar","name":"ID","marker":{"color":"rgba(70,49,126,1)","line":{"color":"rgba(70,49,126,1)"}},"textfont":{"color":"rgba(70,49,126,1)"},"error_y":{"color":"rgba(70,49,126,1)"},"error_x":{"color":"rgba(70,49,126,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["ND"],"y":[50],"type":"bar","name":"ND","marker":{"color":"rgba(69,56,130,1)","line":{"color":"rgba(69,56,130,1)"}},"textfont":{"color":"rgba(69,56,130,1)"},"error_y":{"color":"rgba(69,56,130,1)"},"error_x":{"color":"rgba(69,56,130,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["AK"],"y":[52],"type":"bar","name":"AK","marker":{"color":"rgba(67,62,133,1)","line":{"color":"rgba(67,62,133,1)"}},"textfont":{"color":"rgba(67,62,133,1)"},"error_y":{"color":"rgba(67,62,133,1)"},"error_x":{"color":"rgba(67,62,133,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["RI"],"y":[55],"type":"bar","name":"RI","marker":{"color":"rgba(65,68,135,1)","line":{"color":"rgba(65,68,135,1)"}},"textfont":{"color":"rgba(65,68,135,1)"},"error_y":{"color":"rgba(65,68,135,1)"},"error_x":{"color":"rgba(65,68,135,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["WV"],"y":[57],"type":"bar","name":"WV","marker":{"color":"rgba(62,73,137,1)","line":{"color":"rgba(62,73,137,1)"}},"textfont":{"color":"rgba(62,73,137,1)"},"error_y":{"color":"rgba(62,73,137,1)"},"error_x":{"color":"rgba(62,73,137,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["WY"],"y":[58],"type":"bar","name":"WY","marker":{"color":"rgba(60,79,138,1)","line":{"color":"rgba(60,79,138,1)"}},"textfont":{"color":"rgba(60,79,138,1)"},"error_y":{"color":"rgba(60,79,138,1)"},"error_x":{"color":"rgba(60,79,138,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["NM"],"y":[72],"type":"bar","name":"NM","marker":{"color":"rgba(58,84,140,1)","line":{"color":"rgba(58,84,140,1)"}},"textfont":{"color":"rgba(58,84,140,1)"},"error_y":{"color":"rgba(58,84,140,1)"},"error_x":{"color":"rgba(58,84,140,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["AZ"],"y":[75],"type":"bar","name":"AZ","marker":{"color":"rgba(55,90,140,1)","line":{"color":"rgba(55,90,140,1)"}},"textfont":{"color":"rgba(55,90,140,1)"},"error_y":{"color":"rgba(55,90,140,1)"},"error_x":{"color":"rgba(55,90,140,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["AR"],"y":[79],"type":"bar","name":"AR","marker":{"color":"rgba(53,96,141,1)","line":{"color":"rgba(53,96,141,1)"}},"textfont":{"color":"rgba(53,96,141,1)"},"error_y":{"color":"rgba(53,96,141,1)"},"error_x":{"color":"rgba(53,96,141,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["LA"],"y":[81],"type":"bar","name":"LA","marker":{"color":"rgba(50,101,142,1)","line":{"color":"rgba(50,101,142,1)"}},"textfont":{"color":"rgba(50,101,142,1)"},"error_y":{"color":"rgba(50,101,142,1)"},"error_x":{"color":"rgba(50,101,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["SC"],"y":[89],"type":"bar","name":"SC","marker":{"color":"rgba(48,106,142,1)","line":{"color":"rgba(48,106,142,1)"}},"textfont":{"color":"rgba(48,106,142,1)"},"error_y":{"color":"rgba(48,106,142,1)"},"error_x":{"color":"rgba(48,106,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["MT"],"y":[90],"type":"bar","name":"MT","marker":{"color":"rgba(46,111,142,1)","line":{"color":"rgba(46,111,142,1)"}},"textfont":{"color":"rgba(46,111,142,1)"},"error_y":{"color":"rgba(46,111,142,1)"},"error_x":{"color":"rgba(46,111,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["AL"],"y":[95],"type":"bar","name":"AL","marker":{"color":"rgba(44,115,142,1)","line":{"color":"rgba(44,115,142,1)"}},"textfont":{"color":"rgba(44,115,142,1)"},"error_y":{"color":"rgba(44,115,142,1)"},"error_x":{"color":"rgba(44,115,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["KY"],"y":[97],"type":"bar","name":"KY","marker":{"color":"rgba(42,120,142,1)","line":{"color":"rgba(42,120,142,1)"}},"textfont":{"color":"rgba(42,120,142,1)"},"error_y":{"color":"rgba(42,120,142,1)"},"error_x":{"color":"rgba(42,120,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["NH"],"y":[101],"type":"bar","name":"NH","marker":{"color":"rgba(40,125,142,1)","line":{"color":"rgba(40,125,142,1)"}},"textfont":{"color":"rgba(40,125,142,1)"},"error_y":{"color":"rgba(40,125,142,1)"},"error_x":{"color":"rgba(40,125,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["VT"],"y":[101],"type":"bar","name":"VT","marker":{"color":"rgba(38,130,142,1)","line":{"color":"rgba(38,130,142,1)"}},"textfont":{"color":"rgba(38,130,142,1)"},"error_y":{"color":"rgba(38,130,142,1)"},"error_x":{"color":"rgba(38,130,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["OK"],"y":[104],"type":"bar","name":"OK","marker":{"color":"rgba(36,134,142,1)","line":{"color":"rgba(36,134,142,1)"}},"textfont":{"color":"rgba(36,134,142,1)"},"error_y":{"color":"rgba(36,134,142,1)"},"error_x":{"color":"rgba(36,134,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["NE"],"y":[108],"type":"bar","name":"NE","marker":{"color":"rgba(34,139,141,1)","line":{"color":"rgba(34,139,141,1)"}},"textfont":{"color":"rgba(34,139,141,1)"},"error_y":{"color":"rgba(34,139,141,1)"},"error_x":{"color":"rgba(34,139,141,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["TN"],"y":[121],"type":"bar","name":"TN","marker":{"color":"rgba(33,144,141,1)","line":{"color":"rgba(33,144,141,1)"}},"textfont":{"color":"rgba(33,144,141,1)"},"error_y":{"color":"rgba(33,144,141,1)"},"error_x":{"color":"rgba(33,144,141,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["GA"],"y":[127],"type":"bar","name":"GA","marker":{"color":"rgba(31,149,139,1)","line":{"color":"rgba(31,149,139,1)"}},"textfont":{"color":"rgba(31,149,139,1)"},"error_y":{"color":"rgba(31,149,139,1)"},"error_x":{"color":"rgba(31,149,139,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["OR"],"y":[138],"type":"bar","name":"OR","marker":{"color":"rgba(31,154,138,1)","line":{"color":"rgba(31,154,138,1)"}},"textfont":{"color":"rgba(31,154,138,1)"},"error_y":{"color":"rgba(31,154,138,1)"},"error_x":{"color":"rgba(31,154,138,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["IA"],"y":[141],"type":"bar","name":"IA","marker":{"color":"rgba(31,159,136,1)","line":{"color":"rgba(31,159,136,1)"}},"textfont":{"color":"rgba(31,159,136,1)"},"error_y":{"color":"rgba(31,159,136,1)"},"error_x":{"color":"rgba(31,159,136,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["MD"],"y":[153],"type":"bar","name":"MD","marker":{"color":"rgba(32,163,134,1)","line":{"color":"rgba(32,163,134,1)"}},"textfont":{"color":"rgba(32,163,134,1)"},"error_y":{"color":"rgba(32,163,134,1)"},"error_x":{"color":"rgba(32,163,134,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["KS"],"y":[154],"type":"bar","name":"KS","marker":{"color":"rgba(34,168,132,1)","line":{"color":"rgba(34,168,132,1)"}},"textfont":{"color":"rgba(34,168,132,1)"},"error_y":{"color":"rgba(34,168,132,1)"},"error_x":{"color":"rgba(34,168,132,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["IN"],"y":[156],"type":"bar","name":"IN","marker":{"color":"rgba(38,173,129,1)","line":{"color":"rgba(38,173,129,1)"}},"textfont":{"color":"rgba(38,173,129,1)"},"error_y":{"color":"rgba(38,173,129,1)"},"error_x":{"color":"rgba(38,173,129,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["MO"],"y":[160],"type":"bar","name":"MO","marker":{"color":"rgba(44,177,126,1)","line":{"color":"rgba(44,177,126,1)"}},"textfont":{"color":"rgba(44,177,126,1)"},"error_y":{"color":"rgba(44,177,126,1)"},"error_x":{"color":"rgba(44,177,126,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["NJ"],"y":[168],"type":"bar","name":"NJ","marker":{"color":"rgba(51,182,122,1)","line":{"color":"rgba(51,182,122,1)"}},"textfont":{"color":"rgba(51,182,122,1)"},"error_y":{"color":"rgba(51,182,122,1)"},"error_x":{"color":"rgba(51,182,122,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["CO"],"y":[173],"type":"bar","name":"CO","marker":{"color":"rgba(58,186,118,1)","line":{"color":"rgba(58,186,118,1)"}},"textfont":{"color":"rgba(58,186,118,1)"},"error_y":{"color":"rgba(58,186,118,1)"},"error_x":{"color":"rgba(58,186,118,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["MN"],"y":[176],"type":"bar","name":"MN","marker":{"color":"rgba(67,190,113,1)","line":{"color":"rgba(67,190,113,1)"}},"textfont":{"color":"rgba(67,190,113,1)"},"error_y":{"color":"rgba(67,190,113,1)"},"error_x":{"color":"rgba(67,190,113,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["CT"],"y":[184],"type":"bar","name":"CT","marker":{"color":"rgba(77,195,107,1)","line":{"color":"rgba(77,195,107,1)"}},"textfont":{"color":"rgba(77,195,107,1)"},"error_y":{"color":"rgba(77,195,107,1)"},"error_x":{"color":"rgba(77,195,107,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["NC"],"y":[195],"type":"bar","name":"NC","marker":{"color":"rgba(87,199,102,1)","line":{"color":"rgba(87,199,102,1)"}},"textfont":{"color":"rgba(87,199,102,1)"},"error_y":{"color":"rgba(87,199,102,1)"},"error_x":{"color":"rgba(87,199,102,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["FL"],"y":[199],"type":"bar","name":"FL","marker":{"color":"rgba(98,203,95,1)","line":{"color":"rgba(98,203,95,1)"}},"textfont":{"color":"rgba(98,203,95,1)"},"error_y":{"color":"rgba(98,203,95,1)"},"error_x":{"color":"rgba(98,203,95,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["ME"],"y":[205],"type":"bar","name":"ME","marker":{"color":"rgba(110,206,88,1)","line":{"color":"rgba(110,206,88,1)"}},"textfont":{"color":"rgba(110,206,88,1)"},"error_y":{"color":"rgba(110,206,88,1)"},"error_x":{"color":"rgba(110,206,88,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["WA"],"y":[226],"type":"bar","name":"WA","marker":{"color":"rgba(122,209,81,1)","line":{"color":"rgba(122,209,81,1)"}},"textfont":{"color":"rgba(122,209,81,1)"},"error_y":{"color":"rgba(122,209,81,1)"},"error_x":{"color":"rgba(122,209,81,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["VA"],"y":[236],"type":"bar","name":"VA","marker":{"color":"rgba(134,213,73,1)","line":{"color":"rgba(134,213,73,1)"}},"textfont":{"color":"rgba(134,213,73,1)"},"error_y":{"color":"rgba(134,213,73,1)"},"error_x":{"color":"rgba(134,213,73,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["WI"],"y":[239],"type":"bar","name":"WI","marker":{"color":"rgba(147,215,65,1)","line":{"color":"rgba(147,215,65,1)"}},"textfont":{"color":"rgba(147,215,65,1)"},"error_y":{"color":"rgba(147,215,65,1)"},"error_x":{"color":"rgba(147,215,65,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["MI"],"y":[262],"type":"bar","name":"MI","marker":{"color":"rgba(161,218,56,1)","line":{"color":"rgba(161,218,56,1)"}},"textfont":{"color":"rgba(161,218,56,1)"},"error_y":{"color":"rgba(161,218,56,1)"},"error_x":{"color":"rgba(161,218,56,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["MA"],"y":[281],"type":"bar","name":"MA","marker":{"color":"rgba(174,220,48,1)","line":{"color":"rgba(174,220,48,1)"}},"textfont":{"color":"rgba(174,220,48,1)"},"error_y":{"color":"rgba(174,220,48,1)"},"error_x":{"color":"rgba(174,220,48,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["IL"],"y":[303],"type":"bar","name":"IL","marker":{"color":"rgba(188,223,39,1)","line":{"color":"rgba(188,223,39,1)"}},"textfont":{"color":"rgba(188,223,39,1)"},"error_y":{"color":"rgba(188,223,39,1)"},"error_x":{"color":"rgba(188,223,39,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["OH"],"y":[332],"type":"bar","name":"OH","marker":{"color":"rgba(201,225,31,1)","line":{"color":"rgba(201,225,31,1)"}},"textfont":{"color":"rgba(201,225,31,1)"},"error_y":{"color":"rgba(201,225,31,1)"},"error_x":{"color":"rgba(201,225,31,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["PA"],"y":[395],"type":"bar","name":"PA","marker":{"color":"rgba(215,226,25,1)","line":{"color":"rgba(215,226,25,1)"}},"textfont":{"color":"rgba(215,226,25,1)"},"error_y":{"color":"rgba(215,226,25,1)"},"error_x":{"color":"rgba(215,226,25,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["TX"],"y":[425],"type":"bar","name":"TX","marker":{"color":"rgba(228,228,25,1)","line":{"color":"rgba(228,228,25,1)"}},"textfont":{"color":"rgba(228,228,25,1)"},"error_y":{"color":"rgba(228,228,25,1)"},"error_x":{"color":"rgba(228,228,25,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["CA"],"y":[459],"type":"bar","name":"CA","marker":{"color":"rgba(241,229,29,1)","line":{"color":"rgba(241,229,29,1)"}},"textfont":{"color":"rgba(241,229,29,1)"},"error_y":{"color":"rgba(241,229,29,1)"},"error_x":{"color":"rgba(241,229,29,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["NY"],"y":[607],"type":"bar","name":"NY","marker":{"color":"rgba(253,231,37,1)","line":{"color":"rgba(253,231,37,1)"}},"textfont":{"color":"rgba(253,231,37,1)"},"error_y":{"color":"rgba(253,231,37,1)"},"error_x":{"color":"rgba(253,231,37,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>New York state has far and away the most museums, zoos, and aquariums
+(n = 609). New York, California, Texas, Pennsylvania, Ohio, and Illinois
+are among the only states boasting over 300 of these institutions.
+Mississippi is the state with the lowest number of museums (n = 33).
+Washington, D.C. has many museums for its small size (n = 42); fitting
+for the capital city of the country.</p>
+</div>
+<div
+id="number-of-museums-in-a-city-by-average-median-income-of-the-population"
+class="section level3">
+<h3>Number of Museums in a City by Average Median Income of the
+Population</h3>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-1d69e8432f5223c26607" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-1d69e8432f5223c26607">{"x":{"visdat":{"1443879c78435":["function () ","plotlyVisDat"]},"cur_data":"1443879c78435","attrs":{"1443879c78435":{"x":{},"y":{},"mode":"markers","text":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"Number of museums"},"yaxis":{"domain":[0,1],"automargin":true,"title":"Average median income"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[6,6,11,8,12,8,6,10,9,13,9,9,25,7,5,6,5,5,11,5,8,7,20,7,5,13,5,15,6,15,8,10,9,8,5,7,8,36,16,7,22,17,5,8,16,21,7,5,17,8,7,9,5,5,15,6,15,5,8,5,5,5,9,6,5,9,5,5,10,5,9,6,10,5,12,5,5,5,5,17,5,5,8,5,5,7,8,5,6,12,6,22,5,13,5,12,13,12,13,7,15,5,8,8,6,15,5,11,16,13,10,7,6,5,38,6,5,8,14,7,5,5,13,5,8,10,5,8,16,11,7,11,5,14,6,11,5,5,5,6,5,6,20,5,7,7,12,68,7,11,7,5,8,5,5,10,7,12,7,6,6,5,7,6,6,34,9,10,7,6,7,5,10,6,22,10,5,8,5,6,5,6,12,12,7,16,14,6,7,5,7,6,5,5,5,5,7,32,8,5,5,5,6,9,10,6,9,10,5,6,6,9,9,9,5,5,5,5,7,5,5,7,6,6,5,6,17,8,5,7,5,6],"y":[30306.833333333332,50302.666666666664,33646.090909090912,30982.875,30748,38665,31439.166666666668,60782.699999999997,36100.111111111109,38665.846153846156,33659.777777777781,37799.777777777781,39984.599999999999,49621,34792.800000000003,47854,32427,27059.400000000001,33074.090909090912,36149,23945.125,38728.142857142855,54990.5,33173.714285714283,32744.200000000001,39250.307692307695,46600.199999999997,45100.400000000001,30253.833333333332,35242.599999999999,37883.375,37479.5,32964,46036.5,32795.800000000003,45792.571428571428,39815.125,60230.416666666672,39350.25,39465.142857142855,36322.590909090912,34780.176470588238,36359.199999999997,34888.625,41381.125,33414.190476190473,53033.714285714283,32117,45329.882352941175,40217.5,42141.714285714283,32212.777777777777,30197.799999999999,29071,40863.73333333333,32644.333333333332,32249.333333333332,33918.400000000001,41606.75,42466.599999999999,33289.800000000003,29688.599999999999,33958.777777777781,28976.5,35094.800000000003,30578,31389.200000000001,27286.599999999999,37409.199999999997,32375.599999999999,33790.222222222219,32124.5,28550.799999999999,41013.800000000003,35330,47921.599999999999,39597,46382,31272.799999999999,31009.294117647059,59550,44287.400000000001,31796.75,31518.200000000001,27805,36638.857142857145,32512.125,33819.800000000003,33703,37133.75,25728.666666666668,48949.090909090912,34066.199999999997,35096.307692307695,31356,31359.583333333332,31582.615384615383,37827.333333333336,28393.538461538461,31605.714285714286,37483.333333333336,38770.400000000001,39599.125,29713.375,39192.333333333336,32428.200000000001,32403,29533.454545454544,31927.25,34235.153846153844,42153.199999999997,34851.714285714283,41293.666666666664,37427.400000000001,40381.15789473684,35492.666666666664,38165,33644.625,41195,43056,47907.800000000003,26369.400000000001,32127.76923076923,43233.199999999997,32123,32843.400000000001,55288.599999999999,34348.625,33740.0625,41619.818181818184,34301.142857142855,35969,45938,35440,40013.5,41391.181818181816,42144.800000000003,32882.199999999997,29059.799999999999,55166.666666666664,29302.400000000001,28721,37976.25,35759.800000000003,40603.571428571428,39128,35842,68695.411764705874,34594.428571428572,38528.181818181816,34653.428571428572,31298.599999999999,35092.375,33608.800000000003,31562.599999999999,40900.699999999997,24442.142857142859,30377.166666666668,37114.714285714283,36293,40273.5,62656,36224.142857142855,29826.166666666668,32742,42683.911764705881,34883.111111111109,42459.900000000001,38500,34710.666666666664,34307.428571428572,30684.200000000001,35492.300000000003,35313.833333333336,38238.681818181816,44713.099999999999,34566,30797.75,31129.799999999999,46564.166666666664,32860.199999999997,43027.666666666664,40987.166666666664,32173.583333333332,41540.428571428572,29961,44649.071428571428,37558.833333333336,46447,33665.800000000003,29231.428571428572,37897.666666666664,34271.199999999997,23486.200000000001,21727.799999999999,29443.200000000001,28206.857142857141,29117.8125,45991.75,49735,28859,27659.400000000001,32530.333333333332,38351.666666666664,33870,33780.833333333336,27932.888888888891,31175.099999999999,33524.599999999999,28553.5,30978.666666666668,35730.111111111109,38964.555555555555,30835.444444444445,30373.799999999999,35725.800000000003,39133.800000000003,34396.199999999997,47579.428571428572,32960.199999999997,39046,27462.285714285714,42288.333333333336,50843.666666666664,31860,30173.166666666668,39107.941176470587,38896.5,39823,43098.857142857145,35292.800000000003,28418.833333333332],"mode":"markers","text":["ABILENE","ALAMEDA","ALBANY","ALBION","ALBUQUERQUE","ALEXANDRIA","ALMA","ANCHORAGE","ASHLAND","ATLANTA","AUBURN","AURORA","BALTIMORE","BEDFORD","BELLEVUE","BENTONVILLE","BETHEL","BILLINGS","BIRMINGHAM","BLOOMFIELD","BLOOMINGTON","BOISE","BOSTON","BRECKENRIDGE","BRIDGEPORT","BRISTOL","BRONX","BROOKLYN","BROWNSVILLE","BUFFALO","BURLINGTON","CAMBRIDGE","CANTON","CARMEL","CARTERSVILLE","CHARLOTTE","CHESTER","CHICAGO","CINCINNATI","CLAYTON","CLEVELAND","CLINTON","COLFAX","COLORADO SPRINGS","COLUMBIA","COLUMBUS","CONCORD","COOPERSTOWN","DALLAS","DANVILLE","DAVIS","DAYTON","DECATUR","DENTON","DENVER","DES MOINES","DETROIT","DULUTH","DURHAM","EAST HAMPTON","ERIE","EUGENE","EUREKA","EVANSVILLE","FAIRVIEW","FARMINGTON","FORT COLLINS","FORT MYERS","FORT WORTH","FRANKFORT","FRANKLIN","FREDERICKSBURG","GALVESTON","GENEVA","GEORGETOWN","GERMANTOWN","GLEN ROSE","GOLDEN","GRAFTON","GREENVILLE","GREENWICH","GROTON","HAMILTON","HAMMOND","HANNIBAL","HARTFORD","HENDERSON","HOLLAND","HOMER","HONOLULU","HOT SPRINGS","HOUSTON","HUNTINGTON","HUNTSVILLE","INDEPENDENCE","INDIANAPOLIS","JACKSON","JACKSONVILLE","JAMESTOWN","JOHNSON CITY","KANSAS CITY","KENT","KINGSTON","KNOXVILLE","LAFAYETTE","LANCASTER","LANSING","LAS VEGAS","LEXINGTON","LINCOLN","LITTLE ROCK","LIVINGSTON","LOCKPORT","LONG BEACH","LOS ANGELES","LOUISVILLE","LOWELL","LYNCHBURG","MADISON","MANCHESTER","MANHATTAN","MANSFIELD","MARION","MARLBOROUGH","MARSHALL","MARYSVILLE","MEDFORD","MEMPHIS","MIAMI","MIDDLETOWN","MIDLAND","MILFORD","MILTON","MILWAUKEE","MOBILE","MONROE","MONTGOMERY","MONTPELIER","MONTROSE","MORRISTOWN","MOUNT VERNON","MT PLEASANT","NASHVILLE","NEW BEDFORD","NEW HAVEN","NEW LONDON","NEW ORLEANS","NEW YORK","NEWARK","NEWPORT","NEWTON","NILES","NORFOLK","NORTH EAST","NORTHPORT","OAKLAND","OKLAHOMA CITY","OMAHA","ORLANDO","OSWEGO","OXFORD","OYSTER BAY","PEORIA","PERRY","PETERSBURG","PHILADELPHIA","PHOENIX","PITTSBURGH","PLYMOUTH","POINT PLEASANT","PORTSMOUTH","PRESCOTT","RALEIGH","READING","RICHMOND","ROCHESTER","ROCK HILL","ROCKFORD","ROCKPORT","ROCKVILLE","ROCKY MOUNT","SACRAMENTO","SAINT LOUIS","SALEM","SALT LAKE CITY","SAN ANTONIO","SAN DIEGO","SANTA ANA","SANTA BARBARA","SANTA FE","SAVANNAH","SEYMOUR","SHERIDAN","SHREVEPORT","SOUTH BEND","SPENCER","SPOKANE","SPRINGFIELD","ST LOUIS","STAMFORD","STOCKTON","STUART","SYRACUSE","TACOMA","TAMPA","THOMASTON","TOLEDO","TOPEKA","TOWNSEND","TRENTON","TRINIDAD","TROY","TULSA","UNION","VANCOUVER","VERNON","WAKEFIELD","WARREN","WATERFORD","WATERLOO","WAYNESVILLE","WEST PALM BEACH","WESTMINSTER","WHEATON","WHEELING","WICHITA","WILMINGTON","WINDSOR","WOODSTOCK","WORCESTER","YORK","YOUNGSTOWN"],"type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>The above scatterplot shows the number of museums in a city by the
+average median income of the population over 25 years. Only cities that
+have at least five museums are included. Notably, one team member is
+disappointed to see that their hometown has the highest income in this
+subset of cities to have only 5 museums. There does not appear to be
+much of a correlation between the two variables; we can see this with
+the large amount of variation in income for the cities with 5 museums.
+Notably, New York City has 68 museums and an average median annual
+income of $68.7K. Average median income is obtained by pooling and
+averaging the median income of all zip codes within the city.</p>
+<p>This lack of correlation makes sense when we take into account the
+vast range of median income across neighborhoods within one city. For
+example, though New York City’s average median income is just under
+$70K, it is the top financial center of the world and home to many of
+the richest people alive. Thus, we can expect that city-level data may
+not reveal insights about income and museum count. Instead, we may
+obtain more conclusive findings when analyzing by zip code.</p>
+</div>
+<div id="top-10-museum-cities-and-educational-attainment-distributions"
+class="section level3">
+<h3>Top 10 Museum Cities and Educational Attainment Distributions</h3>
+<table>
+<colgroup>
+<col width="16%" />
+<col width="11%" />
+<col width="19%" />
+<col width="17%" />
+<col width="19%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">city</th>
+<th align="right">n_museums</th>
+<th align="right">est_less_than_HS</th>
+<th align="right">est_HS_diploma</th>
+<th align="right">est_some_college</th>
+<th align="right">est_bachelors</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">BALTIMORE</td>
+<td align="right">25</td>
+<td align="right">17.42</td>
+<td align="right">24.78</td>
+<td align="right">34.89</td>
+<td align="right">22.93</td>
+</tr>
+<tr class="even">
+<td align="left">CHICAGO</td>
+<td align="right">36</td>
+<td align="right">9.09</td>
+<td align="right">17.83</td>
+<td align="right">40.49</td>
+<td align="right">32.60</td>
+</tr>
+<tr class="odd">
+<td align="left">CLEVELAND</td>
+<td align="right">22</td>
+<td align="right">15.34</td>
+<td align="right">28.25</td>
+<td align="right">43.42</td>
+<td align="right">12.99</td>
+</tr>
+<tr class="even">
+<td align="left">HOUSTON</td>
+<td align="right">22</td>
+<td align="right">14.25</td>
+<td align="right">22.08</td>
+<td align="right">40.16</td>
+<td align="right">23.55</td>
+</tr>
+<tr class="odd">
+<td align="left">LOS ANGELES</td>
+<td align="right">38</td>
+<td align="right">10.71</td>
+<td align="right">20.14</td>
+<td align="right">41.40</td>
+<td align="right">27.74</td>
+</tr>
+<tr class="even">
+<td align="left">NEW YORK</td>
+<td align="right">68</td>
+<td align="right">7.81</td>
+<td align="right">16.52</td>
+<td align="right">35.73</td>
+<td align="right">39.93</td>
+</tr>
+<tr class="odd">
+<td align="left">PHILADELPHIA</td>
+<td align="right">34</td>
+<td align="right">9.01</td>
+<td align="right">21.96</td>
+<td align="right">41.35</td>
+<td align="right">27.68</td>
+</tr>
+<tr class="even">
+<td align="left">PORTLAND</td>
+<td align="right">27</td>
+<td align="right">11.23</td>
+<td align="right">24.44</td>
+<td align="right">44.34</td>
+<td align="right">19.99</td>
+</tr>
+<tr class="odd">
+<td align="left">RICHMOND</td>
+<td align="right">22</td>
+<td align="right">12.76</td>
+<td align="right">27.32</td>
+<td align="right">45.56</td>
+<td align="right">14.34</td>
+</tr>
+<tr class="even">
+<td align="left">SAN FRANCISCO</td>
+<td align="right">29</td>
+<td align="right">8.12</td>
+<td align="right">15.15</td>
+<td align="right">40.98</td>
+<td align="right">35.75</td>
+</tr>
+<tr class="odd">
+<td align="left">SPRINGFIELD</td>
+<td align="right">32</td>
+<td align="right">16.29</td>
+<td align="right">26.70</td>
+<td align="right">48.55</td>
+<td align="right">8.49</td>
+</tr>
+<tr class="even">
+<td align="left">WASHINGTON</td>
+<td align="right">54</td>
+<td align="right">10.96</td>
+<td align="right">17.05</td>
+<td align="right">37.87</td>
+<td align="right">34.13</td>
+</tr>
+</tbody>
+</table>
+<p>The above table shows the top 10 cities in the U.S. with the most
+museums, aquariums, or zoos, along with educational attainment
+estimates. Educational attainment categories are: less than high school,
+high school diploma or equivalent, some college or associates, and
+bachelors degree and above. The values are the estimated percentage of
+the population within each category, calculated by taking the mean
+estimated percentage across zip codes within the city. Among these 10
+cities, New York City has the highest percentage of individuals with a
+bachelors degree and above (39.93%), while Springfield, IL has the
+lowest (8.49%). Baltimore, MD has the highest percentage of individuals
+who do not hold a high school diploma (17.42%).</p>
+<p>These spatial units, while interesting for certain observations, did
+not appear to show strong relationships with museum presence. This made
+sense when we took into account the vast range of median income across
+neighborhoods within one city. We will not be able to understand the
+true relationship between museum count and education unless we zoom in
+our unit of analysis. We confirmed our suspicion that city-level data
+will not reveal insights about income and museum count, and that we
+should use zip code as our unit of analysis in the linear
+regression.</p>
+</div>
 </div>
 <div id="regression-analysis" class="section level2">
 <h2>Regression Analysis</h2>
-<p>In this data analysis, the relationship between the number of museums
-in a zip code and two key variables, namely educational attainment, and
-median income, is explored through linear regression models.</p>
+<p>In this data analysis, we assess the relationship between the number
+of museums in a zip code and high educational attainment, as well as
+median income, through linear regression models. We use estimated
+percentage of individuals with a bachelor’s degree in a zip code as a
+proxy for high educational attainment.</p>
+<div id="bachelors-degree-prevalence-and-amount-of-museums-in-zip-code"
+class="section level3">
+<h3>Bachelors degree prevalence and amount of museums in zip code</h3>
 <p>First, the analysis investigates whether the number of people with
-college degrees is significantly related to the number of museums in
-their zip code. The linear regression model indicates a statistically
-significant, positive relationship between the number of museums and the
-percentage of individuals with a bachelor’s degree. The coefficient for
-the number of museums suggests that, on average, as the number of
-museums increases, the percentage of individuals with a bachelor’s
-degree tends to increase, which aligns with our original hypothesis.</p>
+bachelors degrees is significantly related to the number of museums in
+their zip code.</p>
+<pre class="r"><code># Count the number of museums per zip code
+museum_count_per_zip &lt;- museum_edu_df |&gt;
+  group_by(zip_code) |&gt;
+  summarize(n_museums = n())
+# Merge the museum count back into the main dataset
+museum_edu_df &lt;- left_join(museum_edu_df, museum_count_per_zip, by = c(&quot;zip_code&quot;), suffix = c(&quot;.museum_count_per_zip&quot;, &quot;.museum_edu_df&quot;))
+# Linear regression: Number of Museums vs Highest Educational Attainment Category
+regression_model_bach &lt;- lm(bachelors ~ n_museums, data = museum_edu_df)
+# Creating Regression Model Table
+regression_model_bach |&gt;
+  broom::tidy() |&gt;
+  select(term, estimate, p.value) |&gt;
+  knitr::kable(digits=10)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">10.395863</td>
+<td align="right">0.000e+00</td>
+</tr>
+<tr class="even">
+<td align="left">n_museums</td>
+<td align="right">0.171376</td>
+<td align="right">1.811e-07</td>
+</tr>
+</tbody>
+</table>
+<p>E(bachelors) = β0 + β1(museum_n)</p>
+<p>Intercept (Estimated Constant): 10.39586. This is the estimated
+percentage of individuals with a bachelor’s degree when the number of
+museums (n_museums) is zero. However, in practical terms, this value
+might not have a meaningful interpretation because it’s unlikely for the
+number of museums to be zero in a given city.</p>
+<p>Coefficient for n_museums: The coefficient for n_museums is 0.17138.
+This represents the estimated change in the percentage of individuals
+with a bachelor’s degree for each additional museum. The positive sign
+indicates a positive relationship, suggesting that, on average, as the
+number of museums increases, the percentage of individuals with a
+bachelor’s degree also tends to increase.</p>
+<p>Statistical Significance: The associated p-value is very small
+(1.81e-07). This indicates that the number of museums is statistically
+significant in predicting the percentage of individuals with a
+bachelor’s degree.</p>
+<p>The linear regression model indicates a statistically significant,
+positive relationship between the number of museums and the percentage
+of individuals with a bachelor’s degree. The coefficient for the number
+of museums suggests that, on average, as the number of museums
+increases, the percentage of individuals with a bachelor’s degree tends
+to increase, which aligns with our original hypothesis.</p>
+</div>
+<div id="median-income-and-amount-of-museums-in-zip-code"
+class="section level3">
+<h3>Median income and amount of museums in zip code</h3>
 <p>Next, the analysis explores the relationship between median income
-and the number of museums in a zip code, as we think it could
-potentially be a confounder. The linear regression model reveals a
-statistically significant, negative relationship between the number of
-museums and median income. The negative coefficient for the number of
-museums suggests that, on average, median income tends to decrease as
-the number of museums increases, which was unexpected, but should be
-further investigated. In order for median income to be a confounder, it
-must also be associated with our outcome: high educational attainment.
-We ran another linear regression with only bachelors and median_income
-variables. It showed a statistically significant, positive relationship.
-Since median income is associated with both our exposure and outcome, it
-should be further investigated if it is a confounder.</p>
+and the number of museums in a zip code. A confounder must be associated
+with both the predictor and the outcome. Thus, this regression assesses
+the association between the predictor and potential confounder.</p>
+<pre class="r"><code>#Linear regression model: museums and median income
+regression_model_income &lt;- lm(n_museums ~ median_income, data = museum_edu_df)
+# Creating Regression Model Table
+regression_model_income |&gt;
+  broom::tidy() |&gt;
+  select(term, estimate, p.value) |&gt;
+  knitr::kable(digits=10)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">2.537878269</td>
+<td align="right">0.00000e+00</td>
+</tr>
+<tr class="even">
+<td align="left">median_income</td>
+<td align="right">-0.000014379</td>
+<td align="right">2.73268e-05</td>
+</tr>
+</tbody>
+</table>
+<p>E(n_museums) = β0 + β1(median_income)</p>
+<p>Intercept (Estimated Constant):</p>
+<p>The intercept is 2.538. This is the predicted number of museums when
+the median income is zero.</p>
+<p>Coefficient for median_income: The coefficient for median_income is
+-0.000014379. This represents the estimated change in number of museums
+for each unit change in income. The negative sign indicates a negative
+relationship, suggesting that, on average, as the number of median
+income increases, the number of museums tends to decrease.</p>
+<p>Statistical Significance: The associated p-value is very small
+(2.73e-05). This indicates that the number of museums is statistically
+significant in predicting median income.</p>
+<p>The linear regression model reveals a statistically significant,
+negative relationship between the number of museums and median income.
+The negative coefficient for the number of museums suggests that, on
+average, median income tends to decrease as the number of museums
+increases, which was unexpected, but should be further investigated.</p>
+</div>
+<div id="median-income-and-high-educational-attainment-in-zip-code"
+class="section level3">
+<h3>Median income and high educational attainment in zip code</h3>
+<p>The second criterion for median income to be a confounder is its
+association with the outcome: high educational attainment. We ran
+another linear regression with only bachelors and median_income
+variables.</p>
+<pre class="r"><code>#Linear regression model: college degrees and median income
+regression_model_bachincome &lt;- lm(bachelors ~ median_income, data = museum_edu_df)
+
+# Creating Regression Model Table
+regression_model_bachincome |&gt;
+  broom::tidy() |&gt;
+  select(term, estimate, p.value) |&gt;
+  knitr::kable(digits=10)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-6.7252860310</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">median_income</td>
+<td align="right">0.0004709779</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p>The linear regression demonstrated a statistically significant,
+positive relationship. Since median income is associated with both our
+predictor and outcome, it should be further investigated if as a
+confounder.</p>
+</div>
+<div id="assessing-for-confounding-multiple-linear-regression"
+class="section level3">
+<h3>Assessing for confounding: multiple linear regression</h3>
 <p>A multiple linear regression model is employed to investigate whether
 median income is a confounding factor in the relationship between
-educational attainment and the number of museums. We see a greater than
-10% change in coefficients, therefore, we can conclude that median
-income is a confounder.</p>
-<p>Furthermore, comparing models that include and exclude income reveals
-a difference in root mean squared errors (RMSE), indicating that the
-model that includes income is a better fit for our data.</p>
+educational attainment and the number of museums.</p>
+<pre class="r"><code>#linear regression model testing for confounding
+model3 = lm(formula = bachelors ~ median_income + n_museums, data = museum_edu_df)
+# Creating Regression Model Table
+model3 |&gt;
+  broom::tidy() |&gt;
+  select(term, estimate, p.value) |&gt;
+  knitr::kable(digits=10)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-7.3496990801</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">median_income</td>
+<td align="right">0.0004745601</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">n_museums</td>
+<td align="right">0.2448004363</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p>E(bachelors) = β0 + β1(median_income) + β2(n_museums)</p>
+<p>Coefficient for n_museums: 0.245. This represents the estimated
+change in the percentage of individuals with a bachelor’s degree for
+each additional museum, adjusted for median income. In the unadjusted
+model, the coefficient was: 0.17138. Given that there is a 30%
+difference between the crude and unadjusted models (&gt;10%), there is
+sufficient evidence that median income does in fact confound the
+relationship between high educational attainment and amount of museums
+in a zipcode.</p>
+<p>Furthermore, <strong>comparing models that include and exclude
+income</strong> reveals a difference in root mean squared errors (RMSE),
+indicating that the model that includes income is a better fit for our
+data:</p>
+<pre class="r"><code>cv1_df = 
+  crossv_mc(museum_edu_df, 100) 
+cv1_df |&gt; 
+  mutate(
+    mod_1  = map(train, \(df) lm(bachelors ~ n_museums, data = museum_edu_df)),
+    mod_2  = map(train, \(df) lm(bachelors ~ median_income + n_museums, data = museum_edu_df))) |&gt; 
+  mutate(
+    rmse_1 = map2_dbl(mod_1, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_2 = map2_dbl(mod_2, test, \(mod, df) rmse(model = mod, data = df))) |&gt;
+  select(starts_with(&quot;rmse&quot;)) |&gt;
+  pivot_longer(
+    everything(), names_to=&quot;model&quot;, values_to=&quot;rmse&quot;, names_prefix=&quot;rmse_&quot;) |&gt;
+  ggplot(aes(x=model, y=rmse)) + geom_violin()</code></pre>
+<p><img src="Report_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>Subsequently, another linear regression model was run with an
 interaction term, to see if there was interaction with income and
-museums number of bachelor’s degrees obtained. The model shows that the
-effect of the number of museums on educational attainment is not
-constant across all median income levels.</p>
+museums number of bachelor’s degrees obtained.</p>
+<pre class="r"><code>#linear regression model testing for confounding
+model_int = lm(formula = bachelors ~ median_income + n_museums + median_income*n_museums, data = museum_edu_df)
+
+# Creating Regression Model Table
+model_int |&gt;
+  broom::tidy() |&gt;
+  select(term, estimate, p.value) |&gt;
+  knitr::kable(digits=10)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-2.2849540454</td>
+<td align="right">6.528e-07</td>
+</tr>
+<tr class="even">
+<td align="left">median_income</td>
+<td align="right">0.0002901590</td>
+<td align="right">0.000e+00</td>
+</tr>
+<tr class="odd">
+<td align="left">n_museums</td>
+<td align="right">-2.3996940174</td>
+<td align="right">0.000e+00</td>
+</tr>
+<tr class="even">
+<td align="left">median_income:n_museums</td>
+<td align="right">0.0000986444</td>
+<td align="right">0.000e+00</td>
+</tr>
+</tbody>
+</table>
+<p>The significant interaction term in the model implies that the effect
+of n_museums on bachelors is not constant across all levels of
+median_income. In other words, the relationship between the number of
+museums (n_museums) and the likelihood of having a bachelor’s degree
+(bachelors) is influenced by the level of median_income. The model shows
+that the effect of the number of museums on educational attainment is
+not constant across all median income levels.</p>
+<pre class="r"><code>cv2_df = 
+  crossv_mc(museum_edu_df, 100) 
+
+cv2_df |&gt; 
+  mutate(
+    mod_1  = map(train, \(df) lm(formula = bachelors ~ median_income + n_museums + median_income*n_museums, data = museum_edu_df)),
+    mod_2  = map(train, \(df) lm(formula = bachelors ~ median_income + n_museums, data = museum_edu_df))) |&gt; 
+  mutate(
+    rmse_1 = map2_dbl(mod_1, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_2 = map2_dbl(mod_2, test, \(mod, df) rmse(model = mod, data = df))) |&gt;
+  select(starts_with(&quot;rmse&quot;)) |&gt;
+  pivot_longer(
+    everything(), names_to=&quot;model&quot;, values_to=&quot;rmse&quot;, names_prefix=&quot;rmse_&quot;) |&gt;
+  ggplot(aes(x=model, y=rmse)) + geom_violin()</code></pre>
+<p><img src="Report_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>The comparison of models with and without interaction terms using
 cross-validation suggests that the model with interaction terms yields a
 slightly lower RMSE, indicating better predictive performance.
@@ -475,11 +943,54 @@ emphasizing the importance of considering the interplay between median
 income and the number of museums in predicting educational
 attainment.</p>
 </div>
+</div>
 <div id="discussion" class="section level2">
 <h2>Discussion</h2>
+<div id="key-findings-and-insights" class="section level3">
+<h3>Key findings and Insights</h3>
+<p>We used four different linear regression models to answer two central
+questions: (1) whether amount of museums is associated with high
+educational attainment, and (2) whether median income confounds this
+relationship.</p>
+<p>Ultimately, we found that median income explains some of the
+relationship between amount of museums in a zip code and high
+educational attainment. We also found that the relationship between
+amount of museums and educational attainment is not only affected by the
+presence, but also by the level of median income.</p>
+</div>
 <div id="limitations" class="section level3">
 <h3>Limitations</h3>
-<p>data from 2013/14…</p>
+<p>The museums, aquariums and zoos data set we chose to use is 9-10
+years old. Thus, the relevance of our findings may be called into
+question. However, we do not suspect that there were any significant
+social, political, or otherwise circumstantial shifts that would have
+significantly changed relationship between number of museums,
+educational attainment, and median income by zip code.</p>
+<p>During the data acquisition phase of our project, we encountered
+surprising difficulty in obtaining education level and median income by
+zip code. It was easier to obtain a publicly available data set at a
+city-wide, county-wide, or state-wide level. We understand that this is
+likely to protect private information. However, because zip code is so
+often used in epidemiology as a proxy for socioeconomic status, we were
+surprised that it was so difficult to come across on the web!</p>
+</div>
+<div id="association-vs.-causation-next-steps-and-applications"
+class="section level3">
+<h3>Association vs. Causation: Next steps and applications</h3>
+<p>While there is significant evidence that median income confounds the
+association between number of museums and number of bachelors degree
+holders within a zip code, ultimately, we would be remiss to claim that
+there is a causality between museums and educational attainment. Given
+that the number of museums within a zip code is likely due to a
+multiplicity of factors, our causal model at this stage may not be a
+full model.</p>
+<p>We recognize that there is an iterative relationship between income
+and number of museums. That is, areas with higher median incomes will
+have both the means and the motivation to want to fund museums in their
+area. On the other hand, areas with lower median income will not have
+the funds to Making these connections may be reason to advocate for more
+even distribution of federal funding of cultural institutions across zip
+codes to eliminate “museum deserts” in the future.</p>
 </div>
 </div>
 
