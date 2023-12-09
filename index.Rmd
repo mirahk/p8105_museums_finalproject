@@ -8,6 +8,28 @@ text-align: center;
 }
 ```
 
+```{r, include=FALSE}
+library(tidyverse)
+library(plotly)
+library(leaflet)
+```
+
+<p style="text-align:center;">
+
+Museums help to teach, inspire, and connect communities. Their presence (or lack thereof) must influence outcomes. The content of this website explores potential associations between the existence of museums in a location, the educational attainment of the population, and income. Below is a map that pins the locations of museums, aquariums, and zoos in the United States. Clicking on a marker prompts a pop-up of the institution name.
+
+</p>
+
+### Interactive Map
+
+```{r, echo = FALSE, warning = FALSE}
+museum_edu_df |> 
+  leaflet() |> 
+  addProviderTiles(providers$CartoDB.Positron) |> 
+  addCircleMarkers(~longitude, ~latitude, radius = .5, popup = ~museum_name)
+```
+
+
 
 
 

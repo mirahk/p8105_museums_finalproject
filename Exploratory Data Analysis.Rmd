@@ -1,11 +1,14 @@
 ---
-title: "Exploratory"
+title: "Exploratory Data Analysis"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
-
-### About this site
 
 ```{r, include=FALSE}
 library(tidyverse)
+<<<<<<< HEAD
 library(rvest)
 ```
 
@@ -35,5 +38,135 @@ education_df = read_csv("./Data/ACSST5Y2014.S1501-Data.csv", skip = 1, na = c("-
 
 #importing income data
 
+=======
+library(plotly)
 ```
 
+### Data Import and Cleaning
+
+```{r, warning = FALSE, message = FALSE}
+# Import & clean museums dataset
+
+museum_df = 
+  read_csv("./Data/museums.csv", na = c("NA")) %>% 
+  janitor::clean_names() %>% 
+  select(
+    -legal_name, -alternate_name, -institution_name, -phone_number, -employer_id_number,
+    -ends_with("administrative_location"), -starts_with("street_address")) |> 
+  drop_na(zip_code_physical_location) |> 
+  mutate(
+    city = city_physical_location,
+    state = state_physical_location,
+    zip_code = zip_code_physical_location
+  ) |> 
+  select(-ends_with("physical_location"))
+
+# Import & clean education/income dataset
+
+education_df = 
+  read_csv(
+    "./Data/ACSST5Y2014.S1501-Data.csv", skip = 1, na = c("-", "**", "***", "(x)")) %>% 
+  janitor::clean_names() |> 
+  mutate(
+    zip_code = as.numeric(str_replace(geographic_area_name, "ZCTA5 ", "")),
+    less_than_HS = total_estimate_less_than_high_school_graduate,
+    HS_diploma = total_estimate_high_school_graduate_includes_equivalency,
+    some_college = total_estimate_some_college_or_associates_degree,
+    bachelors = total_estimate_bachelors_degree_or_higher,
+    median_income = total_estimate_median_earnings_in_the_past_12_months_in_2014_inflation_adjusted_dollars_population_25_years_and_over_with_earnings
+  ) |> 
+  select(zip_code, less_than_HS, HS_diploma, some_college, bachelors, median_income)
+
+# Merge datasets
+
+museum_edu_df =
+  inner_join(museum_df, education_df)
+>>>>>>> eb2e3ce55616371404752867efea675cc8b7bb65
+```
+
+### Museum Types across the United States
+
+```{r}
+museum_edu_df |> 
+  group_by(museum_type) |> 
+  summarize(
+    n = n(),
+    mean_income = mean(income, na.rm = TRUE)) |> 
+  mutate(
+    museum_type = str_replace(museum_type, "ART MUSEUM", "Art"),
+    museum_type = str_replace(museum_type, "ARBORETUM, BOTANICAL GARDEN, OR NATURE CENTER", "Arboretum/Botanical Garden"),
+    museum_type = str_replace(museum_type, "CHILDREN'S MUSEUM", "Children's"),
+    museum_type = str_replace(museum_type, "GENERAL MUSEUM", "General"),
+    museum_type = str_replace(museum_type, "HISTORIC PRESERVATION", "Historic Preservation"),
+    museum_type = str_replace(museum_type, "HISTORY MUSEUM", "History"),
+    museum_type = str_replace(museum_type, "NATURAL HISTORY MUSEUM", "Natural History"),
+    museum_type = str_replace(museum_type, "SCIENCE & TECHNOLOGY MUSEUM OR PLANETARIUM", "Science & Tech/Planetarium"),
+    museum_type = str_replace(museum_type, "ZOO, AQUARIUM, OR WILDLIFE CONSERVATION", "Zoo/Aquarium/Wildlife Conservation")
+  ) |> 
+  mutate(
+    museum_type = fct_reorder(as_factor(museum_type), mean_income),
+    text_label = str_c("Mean Income: $", mean_income)) |> 
+  plot_ly(x = ~museum_type, y = ~n, color = ~museum_type, 
+          type = "bar", colors = "viridis", text = ~text_label) |> 
+  layout(xaxis = list(title = 'Museum type'), yaxis = list(title = 'Frequency'), 
+         legend = list(title=list(text='<b> Museum type </b>')))
+```
+
+This bar chart displays the number of each museum type across the United States, sorted by increasing mean income. Art museums have the highest mean income of all museum types (just under 70 million dollars per year), but are relatively uncommon. Natural history museums have the second highest mean income (just under 6 million dollars per year), but the lowest frequency of museums (n = 62). Historic preservation museums are represented the most (n = 3877), but have the least average income (~300,000 dollars per year). 
+
+### U.S. States by Number of Museums/Zoos/Aquariums
+
+```{r}
+museum_edu_df |> 
+  count(state) |> 
+  mutate(state = fct_reorder(as_factor(state), n)) |> 
+  plot_ly(x = ~state, y = ~n, color = ~state, type = "bar", colors = "viridis") |> 
+    layout(xaxis = list(title = 'State'), yaxis = list(title = 'Frequency'))
+```
+
+New York state has far and away the most museums, zoos, and aquariums (n = 609). New York, California, Texas, Pennsylvania, Ohio, and Illinois are among the only states boasting over 300 of these institutions. Mississippi is the state with the lowest number of museums (n = 33). Washington, D.C. has many museums for its small size (n = 42); fitting for the capital city of the country. 
+
+### Number of Museums in a City by Average Median Income of the Population
+
+```{r, warning = FALSE}
+museum_edu_df |> 
+  group_by(city) |> 
+  summarize(
+    n_museums = n(),
+    avg_median_income = mean(median_income)
+  ) |> 
+  filter(n_museums >= 5) |> 
+  plot_ly(x = ~n_museums, y = ~avg_median_income, type = "scatter", mode = "markers",
+          text = ~city) |> 
+    layout(xaxis = list(title = 'Number of museums'), yaxis = list(title = 'Average median income')
+    )
+```
+
+The above scatterplot shows the number of museums in a city by the average median income of the population over 25 years. Only cities that have at least five museums are included. Notably, one team member is disappointed to see that their hometown has the highest income in this subset of cities to have only 5 museums. There does not appear to be much of a correlation between the two variables; we can see this with the large amount of variation in income for the cities with 5 museums. Notably, New York City has 68 museums and an average median annual income of $68.7K. Average median income is obtained by pooling and averaging the median income of all zip codes within the city.
+
+This lack of correlation makes sense when we take into account the vastness of median income across a city. Though New York City's average median income is just under $70K, it is the top financial center of the world and home to many of the richest people alive. Thus, we can expect that city-level data may not reveal insights about income and museum count. Instead, we may obtain more conclusive findings when analyzing by zip code.
+
+### Top 10 Museum Cities and Educational Attainment Distributions
+
+```{r}
+museum_edu_df |>
+  group_by(city) |> 
+  summarize(
+    n_museums = n(),
+    est_less_than_HS = mean(less_than_HS, na.rm = TRUE),
+    est_HS_diploma = mean(HS_diploma, na.rm = TRUE),
+    est_some_college = mean(some_college, na.rm = TRUE),
+    est_bachelors = mean(bachelors, na.rm = TRUE)
+  ) |> 
+  filter(min_rank(desc(n_museums)) < 11) |> 
+  knitr::kable(digits = 2)
+```
+
+The above table shows the top 10 cities in the U.S. with the most museums, aquariums, or zoos, along with educational attainment estimates. Educational attainment categories are: less than high school, high school diploma or equivalent, some college or associates, and bachelors degree and above. The values are the estimated percentage of the population within each category, calculated by taking the mean estimated percentage across zip codes within the city.
+
+Among these 10 cities, New York City has the highest percentage of individuals with a bachelors degree and above (39.93%), while Springfield, IL has the lowest (8.49%). Baltimore, MD has the highest percentage of individuals who do not hold a high school diploma (17.42%).
+
+```{r}
+# Save the data frame as a CSV file
+write.csv(museum_edu_df, file = "museum_edu_data.csv", row.names = FALSE)
+```

@@ -13,7 +13,7 @@
 
 <title>Final Report</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
@@ -29,6 +29,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -221,6 +224,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -228,6 +294,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -260,7 +336,7 @@ $(document).ready(function () {
   <a href="Data-Analysis.html">Data Analysis</a>
 </li>
 <li>
-  <a href="mailto:&lt;you@youremail.com&gt;">
+  <a href="mailto:&lt;tem2171@cumc.columbia.edu&gt;,&lt;mpg2166@cumc.columbia.edu&gt;, &lt;msk2265@cumc.columbia.edu&gt;, &lt;skh2164@cumc.columbia.edu&gt;">
     <span class="fa fa-envelope fa-lg"></span>
      
   </a>
@@ -285,16 +361,122 @@ $(document).ready(function () {
 </div>
 
 
-<div id="about-this-site" class="section level3">
-<h3>About this site</h3>
-<p>Sometimes you need to say a bit about the site – how it was made,
-where it’s hosted, where the source code can be found.</p>
-<p>If this is for a project or analysis, I recommend giving some details
-about the R package versions that you used to create the content.</p>
+<pre class="r"><code>museum_edu_df &lt;- read.csv(&quot;museum_edu_data.csv&quot;)</code></pre>
+<div id="motivation" class="section level2">
+<h2>Motivation</h2>
+<p>Museums help to teach, inspire, and connect communities. As museums
+lovers, we believe that their presence (or lack thereof) likely has an
+effect on outcomes such as community educational attainment and
+potentially income and are excited to investigate this.</p>
+</div>
+<div id="initial-questions" class="section level2">
+<h2>Initial Questions</h2>
+<ul>
+<li>What is the make-up of museums, aquariums, and zoos in the United
+States?</li>
+<li></li>
+</ul>
+</div>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<div id="sources" class="section level3">
+<h3>Sources</h3>
+<p>We located a “Museums, Aquariums, and Zoos” dataset from the Institue
+of Museum and Library Services (IMLS) through <a
+href="https://www.kaggle.com/datasets/imls/museum-directory">Kaggle</a>.
+The dataset was compiled from IMLS administrative records for
+discretionary grant recipients, Internal Revenue Service (IRS) records
+for tax-exempt organizations, and private foundation grant recipients.
+The scan and compilation of data sources was done in 2014.</p>
+<p>For educational attainment and income data, we pulled from 2014
+American Community Survey. We downloaded the <a
+href="https://data.census.gov/table?q=education&amp;t=Educational%20Attainment&amp;g=010XX00US$8600000">S1501
+| Educational Attainment</a> dataset, which contains data of interest by
+zip code. The <a
+href="https://www.census.gov/programs-surveys/acs/about.html">ACS</a> is
+an annual survey that provides information about jobs, educational
+attainment, and more. The data tables that are released every year are
+accessible through <a href="census.gov">census.gov</a>.</p>
+</div>
+<div id="cleaning" class="section level3">
+<h3>Cleaning</h3>
+<p>Both datasets are .csv files, so they were both imported with
+<code>read_csv</code>. Variable names were cleaned with
+<code>janitor::clean_names</code> for both files as well. Unnecessary
+variables such as <code>phone_number</code> were removed from the
+museums dataset, and any museums that did not have an associated
+zip_code were removed with <code>drop_na</code>.</p>
+<p>The education (and income) dataset contained a large number of
+columns for each geographic area (zip code). The metadata file
+downloaded from data.census.gov was helpful in determining which columns
+were relevant to this analysis. To simplify the overall dataset, the
+variables that were ultimately selected were the total estimates of each
+educational attainment category – less than high school, high school
+diploma or equivalent, some college or associates degree, and bachelors
+degree or higher. These values are the estimated percentage of each zip
+code’s population. Additionally, the median income variable was
+selected, which is an estimate of the median earnings in the past 12
+months (in 2014) for the population by zip code. The variables had very
+long names, so these were renamed for ease of use in analysis and
+readability. The data comes from a sample of adults 25 and older.</p>
+<p>Finally, the two datasets were merged by zip code using
+<code>inner_join</code> so that only zip codes represented in both
+datasets were included. The final dataset contains information for 7907
+museums, aquariums, or zoos in the United States.</p>
+</div>
+</div>
+<div id="exploratory-analysis" class="section level2">
+<h2>Exploratory Analysis</h2>
+</div>
+<div id="regression-analysis" class="section level2">
+<h2>Regression Analysis</h2>
+<p>In this data analysis, the relationship between the number of museums
+in a zip code and two key variables, namely educational attainment and
+median income, is explored through linear regression models. First, the
+analysis investigates whether the number of people with college degrees
+is significantly related to the number of museums in their zip code. The
+linear regression model indicates a statistically significant, positive
+relationship between the number of museums and the percentage of
+individuals with a bachelor’s degree. The coefficient for the number of
+museums suggests that, on average, as the number of museums increases,
+the percentage of individuals with a bachelor’s degree tends to
+increase. Next, the analysis explores the relationship between median
+income and the number of museums in a zip code. The linear regression
+model reveals a statistically significant, negative relationship between
+the number of museums and median income. The negative coefficient for
+the number of museums suggests that, on average, median income tends to
+decrease as the number of museums increases. A multiple linear
+regression model is employed to investigate whether median income is a
+confounding factor in the relationship between educational attainment
+and the number of museums. The results show that median income and the
+number of museums are statistically significant predictors of
+educational attainment. Furthermore, comparing models that include and
+exclude income reveals a significant difference in root mean squared
+errors (RMSE), indicating that income confounds the relationship between
+educational attainment and the number of museums. Subsequently, the
+analysis tests for interaction effects between median income and the
+number of museums on educational attainment, demonstrating that the
+effect of the number of museums on educational attainment is not
+constant across all median income levels. The comparison of models with
+and without interaction terms using cross-validation suggests that the
+model with interaction terms yields a lower RMSE, indicating better
+predictive performance. Therefore, the model with interaction terms is
+considered the best, emphasizing the importance of considering the
+interplay between median income and the number of museums in predicting
+educational attainment.</p>
+</div>
+<div id="discussion" class="section level2">
+<h2>Discussion</h2>
+<div id="limitations" class="section level3">
+<h3>Limitations</h3>
+<p>data from 2013/14…</p>
+</div>
 </div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -327,6 +509,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

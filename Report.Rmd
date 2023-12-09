@@ -1,9 +1,56 @@
 ---
 title: "Final Report"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
-### About this site
+```{r}
+museum_edu_df <- read.csv("museum_edu_data.csv")
+```
 
-Sometimes you need to say a bit about the site -- how it was made, where it's hosted, where the source code can be found. 
+## Motivation
 
-If this is for a project or analysis, I recommend giving some details about the R package versions that you used to create the content.
+Museums help to teach, inspire, and connect communities. As museums lovers, we believe that their presence (or lack thereof) likely has an effect on outcomes such as community educational attainment and potentially income and are excited to investigate this.
+
+## Initial Questions
+
+* What is the make-up of museums, aquariums, and zoos in the United States?
+* 
+
+## Data
+
+### Sources
+
+We located a "Museums, Aquariums, and Zoos" dataset from the Institue of Museum and Library Services (IMLS) through [Kaggle](https://www.kaggle.com/datasets/imls/museum-directory). The dataset was compiled from IMLS administrative records for discretionary grant recipients, Internal Revenue Service (IRS) records for tax-exempt organizations, and private foundation grant recipients. The scan and compilation of data sources was done in 2014.
+
+For educational attainment and income data, we pulled from 2014 American Community Survey. We downloaded the [S1501 | Educational Attainment](https://data.census.gov/table?q=education&t=Educational%20Attainment&g=010XX00US$8600000) dataset, which contains data of interest by zip code. The [ACS](https://www.census.gov/programs-surveys/acs/about.html) is an annual survey that provides information about jobs, educational attainment, and more. The data tables that are released every year are accessible through [census.gov](census.gov). 
+
+### Cleaning
+
+Both datasets are .csv files, so they were both imported with `read_csv`. Variable names were cleaned with `janitor::clean_names` for both files as well. Unnecessary variables such as `phone_number` were removed from the museums dataset, and any museums that did not have an associated zip_code were removed with `drop_na`. 
+
+The education (and income) dataset contained a large number of columns for each geographic area (zip code). The metadata file downloaded from data.census.gov was helpful in determining which columns were relevant to this analysis. To simplify the overall dataset, the variables that were ultimately selected were the total estimates of each educational attainment category -- less than high school, high school diploma or equivalent, some college or associates degree, and bachelors degree or higher. These values are the estimated percentage of each zip code's population. Additionally, the median income variable was selected, which is an estimate of the median earnings in the past 12 months (in 2014) for the population by zip code. The variables had very long names, so these were renamed for ease of use in analysis and readability. The data comes from a sample of adults 25 and older.
+
+Finally, the two datasets were merged by zip code using `inner_join` so that only zip codes represented in both datasets were included. The final dataset contains information for `r nrow(museum_edu_df)` museums, aquariums, or zoos in the United States.
+
+## Exploratory Analysis
+
+
+
+## Regression Analysis
+In this data analysis, the relationship between the number of museums in a zip code and two key variables, namely educational attainment and median income, is explored through linear regression models. First, the analysis investigates whether the number of people with college degrees is significantly related to the number of museums in their zip code. The linear regression model indicates a statistically significant, positive relationship between the number of museums and the percentage of individuals with a bachelor’s degree. The coefficient for the number of museums suggests that, on average, as the number of museums increases, the percentage of individuals with a bachelor’s degree tends to increase.
+Next, the analysis explores the relationship between median income and the number of museums in a zip code. The linear regression model reveals a statistically significant, negative relationship between the number of museums and median income. The negative coefficient for the number of museums suggests that, on average, median income tends to decrease as the number of museums increases.
+A multiple linear regression model is employed to investigate whether median income is a confounding factor in the relationship between educational attainment and the number of museums. The results show that median income and the number of museums are statistically significant predictors of educational attainment. Furthermore, comparing models that include and exclude income reveals a significant difference in root mean squared errors (RMSE), indicating that income confounds the relationship between educational attainment and the number of museums.
+Subsequently, the analysis tests for interaction effects between median income and the number of museums on educational attainment, demonstrating that the effect of the number of museums on educational attainment is not constant across all median income levels. The comparison of models with and without interaction terms using cross-validation suggests that the model with interaction terms yields a lower RMSE, indicating better predictive performance. Therefore, the model with interaction terms is considered the best, emphasizing the importance of considering the interplay between median income and the number of museums in predicting educational attainment.
+
+
+## Discussion
+
+
+
+### Limitations
+
+data from 2013/14...
+
