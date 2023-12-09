@@ -46,7 +46,7 @@ museum_edu_df =
   inner_join(museum_df, education_df)
 ```
 
-### Museums Summary (NEEDS FORMATTING PEASE HELP -m)
+### Museum Types across the United States
 
 ```{r, echo = FALSE}
 museum_edu_df |> 
@@ -55,13 +55,26 @@ museum_edu_df |>
     n = n(),
     mean_income = mean(income, na.rm = TRUE)) |> 
   mutate(
+    museum_type = str_replace(museum_type, "ART MUSEUM", "Art"),
+    museum_type = str_replace(museum_type, "ARBORETUM, BOTANICAL GARDEN, OR NATURE CENTER", "Arboretum/Botanical Garden"),
+    museum_type = str_replace(museum_type, "CHILDREN'S MUSEUM", "Children's"),
+    museum_type = str_replace(museum_type, "GENERAL MUSEUM", "General"),
+    museum_type = str_replace(museum_type, "HISTORIC PRESERVATION", "Historic Preservation"),
+    museum_type = str_replace(museum_type, "HISTORY MUSEUM", "History"),
+    museum_type = str_replace(museum_type, "NATURAL HISTORY MUSEUM", "Natural History"),
+    museum_type = str_replace(museum_type, "SCIENCE & TECHNOLOGY MUSEUM OR PLANETARIUM", "Science & Tech/Planetarium"),
+    museum_type = str_replace(museum_type, "ZOO, AQUARIUM, OR WILDLIFE CONSERVATION", "Zoo/Aquarium/Wildlife Conservation")
+  ) |> 
+  mutate(
     museum_type = fct_reorder(as_factor(museum_type), mean_income),
     text_label = str_c("Mean Income: $", mean_income)) |> 
   plot_ly(x = ~museum_type, y = ~n, color = ~museum_type, 
-          type = "bar", colors = "viridis", text = ~text_label)
+          type = "bar", colors = "viridis", text = ~text_label) |> 
+  layout(xaxis = list(title = 'Museum type'), yaxis = list(title = 'Frequency'), 
+         legend = list(title=list(text='<b> Museum type </b>')))
 ```
 
-This bar chart displays the number of each type of museum in the United States. Museum types are sorted by their mean income, so art museums average the most income, followed by natural history museums, of which there are the least museums (n = 62). Historic preservations are represented the most (n = 3877), but have the least average income.
+This bar chart displays the number of each museum type across the United States, sorted by increasing mean income. Art museums have the highest mean income of all museum types (just under 70 million dollars per year), but are relatively uncommon. Natural history museums have the second highest mean income (just under 6 million dollars per year), but the lowest frequency of museums (n = 62). Historic preservation museums are represented the most (n = 3877), but have the least average income (~300,000 dollars per year). 
 
 ### U.S. States by Number of Museums/Zoos/Aquariums
 
@@ -69,10 +82,11 @@ This bar chart displays the number of each type of museum in the United States. 
 museum_edu_df |> 
   count(state) |> 
   mutate(state = fct_reorder(as_factor(state), n)) |> 
-  plot_ly(x = ~state, y = ~n, color = ~state, type = "bar", colors = "viridis")
+  plot_ly(x = ~state, y = ~n, color = ~state, type = "bar", colors = "viridis") |> 
+    layout(xaxis = list(title = 'State'), yaxis = list(title = 'Frequency')
 ```
 
-New York state has far and away the most museums, zoos, and aquariums (n = 609). DC also has a lot when you consider the fact that it is essentially just a city (n = 42), but this makes sense when you think about DC as the capitol city of the whole country.
+New York state has far and away the most museums, zoos, and aquariums (n = 609). New York, California, Texas, Pennsylvania, Ohio, and Illinois are among the only states boasting over 300 of these institutions. Mississippi is the state with the lowest number of museums (n = 33). Washington, D.C. has many museums for its small size (n = 42); fitting for the capital city of the country. 
 
 ### Number of Museums in a City by Average Median Income of the Population
 
@@ -85,10 +99,14 @@ museum_edu_df |>
   ) |> 
   filter(n_museums >= 5) |> 
   plot_ly(x = ~n_museums, y = ~avg_median_income, type = "scatter", mode = "markers",
-          text = ~city)
+          text = ~city) |> 
+    layout(xaxis = list(title = 'Number of museums'), yaxis = list(title = 'Average median income')
+    )
 ```
 
-The above scatterplot shows the number of museums in a city by the average median income of the population over 25 years. Only cities that have at least five museums are included. There does not appear to be much of a correlation, between the two variables; we can see this with the large amount of variation in income for the cities with 5 museums. Notably, New York City has 68 museums, and an average median annual income of $68.7K. Average median income is obtained by average the median income by zip codes within the city.
+The above scatterplot shows the number of museums in a city by the average median income of the population over 25 years. Only cities that have at least five museums are included. Notably, one team member is disappointed to see that their hometown has the highest income in this subset of cities to have only 5 museums. There does not appear to be much of a correlation between the two variables; we can see this with the large amount of variation in income for the cities with 5 museums. Notably, New York City has 68 museums and an average median annual income of $68.7K. Average median income is obtained by pooling and averaging the median income of all zip codes within the city.
+
+This lack of correlation makes sense when we take into account the vastness of median income across a city. Though New York City's average median income is just under $70K, it is the top financial center of the world and home to many of the richest people alive. Thus, we can expect that city-level data may not reveal insights about income and museum count. Instead, we may obtain more conclusive findings when analyzing by zip code.
 
 ### Top 10 Museum Cities and Educational Attainment Distributions
 
@@ -107,6 +125,8 @@ museum_edu_df |>
 ```
 
 The above table shows the top 10 cities in the U.S. with the most museums, aquariums, or zoos, along with educational attainment estimates. Educational attainment categories are: less than high school, high school diploma or equivalent, some college or associates, and bachelors degree and above. The values are the estimated percentage of the population within each category, calculated by taking the mean estimated percentage across zip codes within the city.
+
+Among these 10 cities, New York City has the highest percentage of individuals with a bachelors degree and above (39.93%), while Springfield, IL has the lowest (8.49%). Baltimore, MD has the highest percentage of individuals who do not hold a high school diploma (17.42%).
 
 ```{r}
 # Save the data frame as a CSV file

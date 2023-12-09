@@ -11,6 +11,9 @@ output:
 ### Mirah Koota
 
 ### Sarah Haberlack
+<img src = "images/sarah.jpeg" style = "width:25%">
+
+Sarah is a second yeah MPH student in the Epidemiology department with a certificate in Applied Biostatistics and Public Health Data Science. They live in Flatbush, New York.
 
 ### Teresa Moore
 <img src = "images/IMG_3208.JPG" style = "width:25%">
