@@ -11,8 +11,10 @@ library(tidyverse)
 library(plotly)
 ```
 
-```{r, include=FALSE}
-#data import and cleaning
+### Data Import and Cleaning
+
+```{r, warning = FALSE, message = FALSE}
+# Import & clean museums dataset
 
 museum_df = 
   read_csv("./Data/museums.csv", na = c("NA")) %>% 
@@ -28,6 +30,8 @@ museum_df =
   ) |> 
   select(-ends_with("physical_location"))
 
+# Import & clean education/income dataset
+
 education_df = 
   read_csv(
     "./Data/ACSST5Y2014.S1501-Data.csv", skip = 1, na = c("-", "**", "***", "(x)")) %>% 
@@ -42,13 +46,15 @@ education_df =
   ) |> 
   select(zip_code, less_than_HS, HS_diploma, some_college, bachelors, median_income)
 
+# Merge datasets
+
 museum_edu_df =
   inner_join(museum_df, education_df)
 ```
 
 ### Museum Types across the United States
 
-```{r, echo = FALSE}
+```{r}
 museum_edu_df |> 
   group_by(museum_type) |> 
   summarize(
@@ -78,19 +84,19 @@ This bar chart displays the number of each museum type across the United States,
 
 ### U.S. States by Number of Museums/Zoos/Aquariums
 
-```{r, echo = FALSE}
+```{r}
 museum_edu_df |> 
   count(state) |> 
   mutate(state = fct_reorder(as_factor(state), n)) |> 
   plot_ly(x = ~state, y = ~n, color = ~state, type = "bar", colors = "viridis") |> 
-    layout(xaxis = list(title = 'State'), yaxis = list(title = 'Frequency')
+    layout(xaxis = list(title = 'State'), yaxis = list(title = 'Frequency'))
 ```
 
 New York state has far and away the most museums, zoos, and aquariums (n = 609). New York, California, Texas, Pennsylvania, Ohio, and Illinois are among the only states boasting over 300 of these institutions. Mississippi is the state with the lowest number of museums (n = 33). Washington, D.C. has many museums for its small size (n = 42); fitting for the capital city of the country. 
 
 ### Number of Museums in a City by Average Median Income of the Population
 
-```{r, echo = FALSE, warning = FALSE}
+```{r, warning = FALSE}
 museum_edu_df |> 
   group_by(city) |> 
   summarize(
@@ -110,7 +116,7 @@ This lack of correlation makes sense when we take into account the vastness of m
 
 ### Top 10 Museum Cities and Educational Attainment Distributions
 
-```{r, echo = FALSE}
+```{r}
 museum_edu_df |>
   group_by(city) |> 
   summarize(
