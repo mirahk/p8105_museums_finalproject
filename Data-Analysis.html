@@ -13,7 +13,7 @@
 
 <title>Data Analysis</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
@@ -406,15 +406,13 @@ regression_model_bach |&gt;
 <p>E(bachelors) = β0 + β1(museum_n)</p>
 <p>Intercept (Estimated Constant): The intercept is 10.39586. This is
 the estimated percentage of individuals with a bachelor’s degree when
-the number of museums (n_museums) is zero. However, in practical terms,
-this value might not have a meaningful interpretation because it’s
-unlikely for the number of museums to be zero in a given city.</p>
-<p>Coefficient for n_museums: The coefficient for n_museums is 0.17138.
-This represents the estimated change in the percentage of individuals
-with a bachelor’s degree for each additional museum. The positive sign
-indicates a positive relationship, suggesting that, on average, as the
-number of museums increases, the percentage of individuals with a
-bachelor’s degree also tends to increase.</p>
+the number of museums (n_museums) is zero.</p>
+<p>Coefficient for n_museums (Number of Museums): The coefficient for
+n_museums is 0.17138. This represents the estimated change in the
+percentage of individuals with a bachelor’s degree for each additional
+museum. The positive sign indicates a positive relationship, suggesting
+that, on average, as the number of museums increases, the percentage of
+individuals with a bachelor’s degree also tends to increase.</p>
 <p>Statistical Significance: The associated p-value is very small
 (1.81e-07). This indicates that the number of museums is statistically
 significant in predicting the percentage of individuals with a
@@ -459,29 +457,80 @@ regression_model_income |&gt;
 </table>
 <p>E(n_museums) = β0 + β1(median_income)</p>
 <p>Intercept (Estimated Constant):</p>
-<p>The intercept is $37,533.96. This is the predicted median income when
-the number of museums (n_museums) is zero.</p>
-<p>Coefficient for n_museums: The coefficient for n_museums is -156.74.
-This represents the estimated change in median income for each
-additional museum. The negative sign indicates a negative relationship,
-suggesting that, on average, as the number of museums increases, the
-median income tends to decrease.</p>
+<p>The intercept is 2.538. This is the predicted number of museums when
+the median income is zero.</p>
+<p>Coefficient for median_income: The coefficient for median_income is
+-0.000014379. This represents the estimated change in number of museums
+for each unit change in income. The negative sign indicates a negative
+relationship, suggesting that, on average, as the number of median
+income increases, the number of museums tends to decrease.</p>
 <p>Statistical Significance: The associated p-value is very small
 (2.73e-05). This indicates that the number of museums is statistically
 significant in predicting median income.</p>
 <p>In summary, the results suggest a statistically significant,negative
-relationship between the number of museums and median income.</p>
+relationship between the median income and number of museums.</p>
+<p>#Is median income significantly related to the number of people who
+hold bachelor’s degrees?</p>
+<pre class="r"><code>#Linear regression model: college degrees and medium income
+regression_model_bachincome &lt;- lm(bachelors ~ median_income, data = museum_edu_df)
+
+# Creating Regression Model Table
+regression_model_bachincome |&gt;
+  broom::tidy() |&gt;
+  select(term, estimate, p.value) |&gt;
+  knitr::kable(digits=10)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-6.7252860310</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">median_income</td>
+<td align="right">0.0004709779</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p>E(bachelors) = β0 + β1(median_income)</p>
+<p>Intercept (Estimated Constant):</p>
+<p>The intercept is -6.725. This is the estimated percentage of
+individuals with a bachelor’s degree when the median income is zero.</p>
+<p>Coefficient for median_income: The coefficient for median_income is
+0.0004709779 This represents the estimated change in estimated
+percentage of individuals with a bachelor’s degree for each unit change
+in income. The positive sign indicates a positive relationship,
+suggesting that, on average, as the number of museums increases, the
+median income tends to increase</p>
+<p>Statistical Significance: The associated p-value is very small
+(2.73e-05). This indicates that the median income is statistically
+significant in percentage of individual’s with a bachelor’s degrees.</p>
+<p>In summary, the results suggest a statistically significant, positive
+relationship between the number of bachelor’s degrees and median
+income.</p>
 </div>
 <div
 id="is-median-income-a-confounder-on-the-relationship-between-educational-attainment-and-the-amount-of-museums"
 class="section level1">
 <h1>Is median income a confounder on the relationship between
 educational attainment and the amount of museums?</h1>
+<p>since median income is associated with both the number of museums and
+percentage of individuals with a bachelor’s degree, we should
+investigate if median income is a confounder between bachelor’s degrees
+and number of museums.</p>
 <pre class="r"><code>#linear regression model testing for confounding
-model3 = lm(formula = bachelors ~ median_income + n_museums, data = museum_edu_df)
+model4 = lm(formula = bachelors ~ median_income + n_museums, data = museum_edu_df)
 
 # Creating Regression Model Table
-model3 |&gt;
+model4 |&gt;
   broom::tidy() |&gt;
   select(term, estimate, p.value) |&gt;
   knitr::kable(digits=10)</code></pre>
@@ -545,9 +594,10 @@ cv1_df |&gt;
   pivot_longer(
     everything(), names_to=&quot;model&quot;, values_to=&quot;rmse&quot;, names_prefix=&quot;rmse_&quot;) |&gt;
   ggplot(aes(x=model, y=rmse)) + geom_violin()</code></pre>
-<p><img src="Data-Analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="Data-Analysis_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>The model excluding income has a much higher root mean squared errors
-(RMSE) value than the model including income.</p>
+(RMSE) value than the model including income. This means that the model
+including income better fits our data.</p>
 </div>
 </div>
 <div
@@ -620,7 +670,7 @@ cv2_df |&gt;
   pivot_longer(
     everything(), names_to=&quot;model&quot;, values_to=&quot;rmse&quot;, names_prefix=&quot;rmse_&quot;) |&gt;
   ggplot(aes(x=model, y=rmse)) + geom_violin()</code></pre>
-<p><img src="Data-Analysis_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="Data-Analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>The model with an interaction term between bachelors and median
 income has a slightly lower RMSE value than the model without an
 interaction term. Ultimately, the model with interaction terms appears

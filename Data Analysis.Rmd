@@ -38,9 +38,9 @@ regression_model_bach |>
 E(bachelors) = β0 + β1(museum_n)
 
 Intercept (Estimated Constant):
-The intercept is 10.39586. This is the estimated percentage of individuals with a bachelor's degree when the number of museums (n_museums) is zero. However, in practical terms, this value might not have a meaningful interpretation because it's unlikely for the number of museums to be zero in a given city.
+The intercept is 10.39586. This is the estimated percentage of individuals with a bachelor's degree when the number of museums (n_museums) is zero.
 
-Coefficient for n_museums:
+Coefficient for n_museums (Number of Museums):
 The coefficient for n_museums is 0.17138. This represents the estimated change in the percentage of individuals with a bachelor's degree for each additional museum. The positive sign indicates a positive relationship, suggesting that, on average, as the number of museums increases, the percentage of individuals with a bachelor's degree also tends to increase.
 
 Statistical Significance:
@@ -66,23 +66,51 @@ E(n_museums) = β0 + β1(median_income)
 
 Intercept (Estimated Constant):
 
-The intercept is $37,533.96. This is the predicted median income when the number of museums (n_museums) is zero. 
+The intercept is 2.538. This is the predicted number of museums when the median income is zero. 
 
-Coefficient for n_museums:
-The coefficient for n_museums is -156.74. This represents the estimated change in median income for each additional museum. The negative sign indicates a negative relationship, suggesting that, on average, as the number of museums increases, the median income tends to decrease.
+Coefficient for median_income:
+The coefficient for median_income is -0.000014379. This represents the estimated change in number of museums for each unit change in income. The negative sign indicates a negative relationship, suggesting that, on average, as the number of median income increases, the number of museums tends to decrease.
 
 Statistical Significance:
 The associated p-value is very small (2.73e-05). This indicates that the number of museums is statistically significant in predicting median income.
 
-In summary, the results suggest a statistically significant,negative relationship between the number of museums and median income. 
+In summary, the results suggest a statistically significant,negative relationship between the median income and number of museums. 
 
-# Is median income a confounder on the relationship between educational attainment and the amount of museums?
+#Is median income significantly related to the number of people who hold bachelor's degrees?
 ```{r}
-#linear regression model testing for confounding
-model3 = lm(formula = bachelors ~ median_income + n_museums, data = museum_edu_df)
+#Linear regression model: college degrees and medium income
+regression_model_bachincome <- lm(bachelors ~ median_income, data = museum_edu_df)
 
 # Creating Regression Model Table
-model3 |>
+regression_model_bachincome |>
+  broom::tidy() |>
+  select(term, estimate, p.value) |>
+  knitr::kable(digits=10)
+```
+
+E(bachelors) = β0 + β1(median_income)
+
+Intercept (Estimated Constant):
+
+The intercept is -6.725. This is the estimated percentage of individuals with a bachelor's degree when the median income is zero.
+
+Coefficient for median_income:
+The coefficient for median_income is 0.0004709779 This represents the estimated change in estimated percentage of individuals with a bachelor's degree for each unit change in income. The positive sign indicates a positive relationship, suggesting that, on average, as the number of museums increases, the median income tends to increase
+
+Statistical Significance:
+The associated p-value is very small (2.73e-05). This indicates that the median income is statistically significant in percentage of individual's with a bachelor's degrees.
+
+In summary, the results suggest a statistically significant, positive relationship between the number of bachelor's degrees and median income.
+
+# Is median income a confounder on the relationship between educational attainment and the amount of museums?
+since median income is associated with both the number of museums and percentage of individuals with a bachelor's degree, we should investigate if median income is a confounder between bachelor's degrees and number of museums. 
+
+```{r}
+#linear regression model testing for confounding
+model4 = lm(formula = bachelors ~ median_income + n_museums, data = museum_edu_df)
+
+# Creating Regression Model Table
+model4 |>
   broom::tidy() |>
   select(term, estimate, p.value) |>
   knitr::kable(digits=10)
@@ -118,7 +146,7 @@ cv1_df |>
   ggplot(aes(x=model, y=rmse)) + geom_violin()
 ```
 
-The model excluding income has a much higher root mean squared errors (RMSE) value than the model including income.
+The model excluding income has a much higher root mean squared errors (RMSE) value than the model including income. This means that the model including income better fits our data.
 
 # Testing for Interaction between Median Income and Number of Museums
 ```{r}
