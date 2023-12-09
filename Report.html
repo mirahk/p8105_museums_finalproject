@@ -431,39 +431,44 @@ museums, aquariums, or zoos in the United States.</p>
 <div id="regression-analysis" class="section level2">
 <h2>Regression Analysis</h2>
 <p>In this data analysis, the relationship between the number of museums
-in a zip code and two key variables, namely educational attainment and
-median income, is explored through linear regression models. First, the
-analysis investigates whether the number of people with college degrees
-is significantly related to the number of museums in their zip code. The
-linear regression model indicates a statistically significant, positive
-relationship between the number of museums and the percentage of
-individuals with a bachelor’s degree. The coefficient for the number of
-museums suggests that, on average, as the number of museums increases,
-the percentage of individuals with a bachelor’s degree tends to
-increase. Next, the analysis explores the relationship between median
-income and the number of museums in a zip code. The linear regression
-model reveals a statistically significant, negative relationship between
-the number of museums and median income. The negative coefficient for
-the number of museums suggests that, on average, median income tends to
-decrease as the number of museums increases. A multiple linear
-regression model is employed to investigate whether median income is a
-confounding factor in the relationship between educational attainment
-and the number of museums. The results show that median income and the
-number of museums are statistically significant predictors of
-educational attainment. Furthermore, comparing models that include and
-exclude income reveals a significant difference in root mean squared
-errors (RMSE), indicating that income confounds the relationship between
-educational attainment and the number of museums. Subsequently, the
-analysis tests for interaction effects between median income and the
-number of museums on educational attainment, demonstrating that the
+in a zip code and two key variables, namely educational attainment, and
+median income, is explored through linear regression models.</p>
+<p>First, the analysis investigates whether the number of people with
+college degrees is significantly related to the number of museums in
+their zip code. The linear regression model indicates a statistically
+significant, positive relationship between the number of museums and the
+percentage of individuals with a bachelor’s degree. The coefficient for
+the number of museums suggests that, on average, as the number of
+museums increases, the percentage of individuals with a bachelor’s
+degree tends to increase, which aligns with our original hypothesis.</p>
+<p>Next, the analysis explores the relationship between median income
+and the number of museums in a zip code, as we think it could
+potentially be a confounder. The linear regression model reveals a
+statistically significant, negative relationship between the number of
+museums and median income. The negative coefficient for the number of
+museums suggests that, on average, median income tends to decrease as
+the number of museums increases, which was unexpected, but should be
+further investigated.</p>
+<p>A multiple linear regression model is employed to investigate whether
+median income is a confounding factor in the relationship between
+educational attainment and the number of museums. We see a greater than
+10% change in coefficients, therefore, we can conclude that median
+income is a confounder.</p>
+<p>Furthermore, comparing models that include and exclude income reveals
+a difference in root mean squared errors (RMSE), indicating that the
+model that includes income is a better fit for our data.</p>
+<p>Subsequently, another linear regression model was run with an
+interaction term, to see if there was interaction with income and
+museums number of bachelor’s degrees obtained. The model shows that the
 effect of the number of museums on educational attainment is not
-constant across all median income levels. The comparison of models with
-and without interaction terms using cross-validation suggests that the
-model with interaction terms yields a lower RMSE, indicating better
-predictive performance. Therefore, the model with interaction terms is
-considered the best, emphasizing the importance of considering the
-interplay between median income and the number of museums in predicting
-educational attainment.</p>
+constant across all median income levels.</p>
+<p>The comparison of models with and without interaction terms using
+cross-validation suggests that the model with interaction terms yields a
+slightly lower RMSE, indicating better predictive performance.
+Therefore, the model with interaction terms is considered the best,
+emphasizing the importance of considering the interplay between median
+income and the number of museums in predicting educational
+attainment.</p>
 </div>
 <div id="discussion" class="section level2">
 <h2>Discussion</h2>
