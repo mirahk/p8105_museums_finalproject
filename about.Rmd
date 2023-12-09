@@ -1,13 +1,30 @@
 ---
 title: "About Us"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ## Meet the Group!
 
 ### Mirah Koota
+<img src = "images/mirah.jpeg" style = "width:25%">
+
+Mirah is a second year MS part-time student in Biostatistics on the Public Health and Data Science track. She also works full time as a clinical scientist in infectious diseases and vaccines. 
 
 ### Sarah Haberlack
+<img src = "images/sarah.jpeg" style = "width:25%">
+
+Sarah is a second yeah MPH student in the Epidemiology department with a certificate in Applied Biostatistics and Public Health Data Science. They live in Flatbush, New York.
 
 ### Teresa Moore
+<img src = "images/IMG_3208.JPG" style = "width:25%">
+
+Teresa is a second year MPH student in the department of Epidemiology with a certificate in Applied Biostatistics and Public Health Data.
 
 ### Madison Goldrich
+
+<img src = "images/madison_headshot.jpeg" style = "width:25%">
+
+Madison is a second-year MPH student at Mailman in the Department of Sociomedical Sciences with a Certificate in Applied Biostatistics and Public Health Data Science. This semester she is also a co-Lead TA for Quantitative Research Foundations in the MPH Core Curriculum.
