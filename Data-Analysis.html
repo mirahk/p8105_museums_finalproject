@@ -422,10 +422,15 @@ relationship between the number of museums and the percentage of
 individuals with a bachelor’s degree.</p>
 </div>
 <div
-id="is-the-median-income-significantly-related-to-the-amount-of-museums-in-a-zip-code"
+id="is-median-income-a-confounder-on-the-relationship-between-educational-attainment-and-the-amount-of-museums"
 class="section level1">
-<h1>Is the median income significantly related to the amount of museums
-in a zip code?</h1>
+<h1>Is median income a confounder on the relationship between
+educational attainment and the amount of museums?</h1>
+<div
+id="is-the-median-income-significantly-related-to-the-amount-of-museums-in-a-zip-code"
+class="section level2">
+<h2>Is the median income significantly related to the amount of museums
+in a zip code?</h2>
 <pre class="r"><code>#Linear regression model: museums and medium income
 regression_model_income &lt;- lm(n_museums ~ median_income, data = museum_edu_df)
 
@@ -472,9 +477,9 @@ relationship between the median income and number of museums.</p>
 </div>
 <div
 id="is-median-income-significantly-related-to-the-number-of-people-who-hold-bachelors-degrees"
-class="section level1">
-<h1>Is median income significantly related to the number of people who
-hold bachelor’s degrees?</h1>
+class="section level2">
+<h2>Is median income significantly related to the number of people who
+hold bachelor’s degrees?</h2>
 <pre class="r"><code>#Linear regression model: college degrees and medium income
 regression_model_bachincome &lt;- lm(bachelors ~ median_income, data = museum_edu_df)
 
@@ -521,11 +526,9 @@ significant in percentage of individual’s with a bachelor’s degrees.</p>
 relationship between the number of bachelor’s degrees and median
 income.</p>
 </div>
-<div
-id="is-median-income-a-confounder-on-the-relationship-between-educational-attainment-and-the-amount-of-museums"
-class="section level1">
-<h1>Is median income a confounder on the relationship between
-educational attainment and the amount of museums?</h1>
+<div id="regression-model-with-both-median-income-and-number-of-museums"
+class="section level2">
+<h2>Regression model with both median income and number of museums</h2>
 <p>since median income is associated with both the number of museums and
 percentage of individuals with a bachelor’s degree, we should
 investigate if median income is a confounder between bachelor’s degrees
@@ -581,6 +584,7 @@ a 30% difference between the crude and unadjusted models, which is
 greater than 10%, signifying that income does infact confound the
 relationship between high educational attainment and amount of museums
 in a zipcode.</p>
+</div>
 <div id="comparison-of-models-including-income-and-excluding-income"
 class="section level2">
 <h2>Comparison of models including income and excluding income</h2>

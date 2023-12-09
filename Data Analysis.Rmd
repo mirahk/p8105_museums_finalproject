@@ -48,8 +48,9 @@ The associated p-value is very small (1.81e-07). This indicates that the number 
 
 In summary, the results suggest a statistically significant, positive relationship between the number of museums and the percentage of individuals with a bachelor's degree.
 
+# Is median income a confounder on the relationship between educational attainment and the amount of museums?
 
-# Is the median income significantly related to the amount of museums in a zip code?
+## Is the median income significantly related to the amount of museums in a zip code?
 
 ```{r}
 #Linear regression model: museums and medium income
@@ -76,7 +77,7 @@ The associated p-value is very small (2.73e-05). This indicates that the number 
 
 In summary, the results suggest a statistically significant,negative relationship between the median income and number of museums. 
 
-# Is median income significantly related to the number of people who hold bachelor's degrees?
+## Is median income significantly related to the number of people who hold bachelor's degrees?
 ```{r}
 #Linear regression model: college degrees and medium income
 regression_model_bachincome <- lm(bachelors ~ median_income, data = museum_edu_df)
@@ -102,7 +103,7 @@ The associated p-value is very small (2.73e-05). This indicates that the median 
 
 In summary, the results suggest a statistically significant, positive relationship between the number of bachelor's degrees and median income.
 
-# Is median income a confounder on the relationship between educational attainment and the amount of museums?
+## Regression model with both median income and number of museums
 since median income is associated with both the number of museums and percentage of individuals with a bachelor's degree, we should investigate if median income is a confounder between bachelor's degrees and number of museums. 
 
 ```{r}
