@@ -76,7 +76,7 @@ The associated p-value is very small (2.73e-05). This indicates that the number 
 
 In summary, the results suggest a statistically significant,negative relationship between the median income and number of museums. 
 
-#Is median income significantly related to the number of people who hold bachelor's degrees?
+# Is median income significantly related to the number of people who hold bachelor's degrees?
 ```{r}
 #Linear regression model: college degrees and medium income
 regression_model_bachincome <- lm(bachelors ~ median_income, data = museum_edu_df)
