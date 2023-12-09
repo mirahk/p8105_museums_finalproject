@@ -8,37 +8,6 @@ output:
 
 ```{r, include=FALSE}
 library(tidyverse)
-<<<<<<< HEAD
-library(rvest)
-```
-
-```{r, include=FALSE}
-#start of data cleaning
-
-#importing Museum data
-museum_df = read_csv("./Data/museums.csv", na = c("NA")) %>% 
-  janitor::clean_names() %>% 
-  select(-alternate_name, -institution_name, -phone_number, -employer_id_number,-street_address_physical_location, -city_physical_location, -state_physical_location, locale_code_nces, -county_code_fips, state_code_fips)
-
-#importing education data
-education_key_df = read_csv("./Data/ACSST5Y2014.S1501-Column-Metadata.csv") %>% 
-  janitor::clean_names()
-```
-
-
-```{r, include=FALSE}
-#This data has like 150 columns, and I'm not sure which to keep. I think we should figure out what to remove before fully cleaning, and doing a bunch of pivot longers. I tried a bunch of things but trying to do it by names_pattern ended up working the best
-education_df = read_csv("./Data/ACSST5Y2014.S1501-Data.csv", skip = 1, na = c("-", "**", "***", "(x)")) %>% janitor::clean_names() %>% 
-  select(-contains("total")) %>% 
-  select(male_estimate_population_18_to_24_years, female_estimate_population_18_to_24_years, male_estimate_population_25_years_and_over, female_estimate_population_25_years_and_over, everything())%>%
-  pivot_longer(cols= male_estimate_population_18_to_24_years:female_estimate_population_25_years_and_over, 
-               names_to = c("gender", "age_range"),
-               names_pattern = "([a-z]+)_estimate_population_(\\d+_to_\\d+_years|\\d+_years_and_over)",
-               values_to = "population")
-
-#importing income data
-
-=======
 library(plotly)
 ```
 
@@ -81,7 +50,6 @@ education_df =
 
 museum_edu_df =
   inner_join(museum_df, education_df)
->>>>>>> eb2e3ce55616371404752867efea675cc8b7bb65
 ```
 
 ### Museum Types across the United States

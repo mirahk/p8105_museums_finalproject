@@ -29,6 +29,10 @@ museum_edu_df |>
   addCircleMarkers(~longitude, ~latitude, radius = .5, popup = ~museum_name)
 ```
 
+### Screencast
+
+<video src = "images/screencast.mov" controls = "controls" style = "max-width: 730px;">
+</video>
 
 
 
